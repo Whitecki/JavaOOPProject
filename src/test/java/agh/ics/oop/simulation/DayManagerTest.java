@@ -118,16 +118,74 @@ void removeDeathAnimals_ShouldRemoveAnimalsWithZeroEnergy() {
     }
     @Test
 //    Sprawdź, czy energia zwierzęcia rośnie po zjedzeniu trawy.
-//    Sprawdź, czy trawa jest usuwana z mapy po zjedzeniu.
-//    Sprawdź, czy metoda radzi sobie z sytuacją, gdy na danym polu nie ma trawy.
-//    Sprawdź, czy metoda radzi sobie z sytuacją, gdy na danym polu nie ma zwierząt.
-    void testKeepCalmAndEatGrass() {
-        // Ustaw zwierzęta i trawę
-        // Wywołaj metodę
+    void testKeepCalmAndEatGrass_IsEnergyGrowingAfterEatenGrass() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addGrass(new Vector2D(2,3));
+        dayManager.rotateAndMoveAnimals();
+
         dayManager.keepCalmAndEatGrass();
-        // Sprawdź, czy trawa została zjedzona i czy energia zwierząt wzrosła
-        // ... asercje ...
+
+        int expectedEnergyAnimal = 41;
+        int expectedEnergyAnimal1 = 29;
+        assertEquals(expectedEnergyAnimal1,animal1.getEnergy());
+        assertEquals(expectedEnergyAnimal,animal.getEnergy());
     }
+//    Sprawdź, czy trawa jest usuwana z mapy po zjedzeniu.
+    @Test
+    void testKeepCalmAndEatGrass_IsGrassRemovedAfterEating() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addGrass(new Vector2D(2,3));
+        dayManager.rotateAndMoveAnimals();
+
+        dayManager.keepCalmAndEatGrass();
+
+        boolean actual = map.isGrassAt(new Vector2D(2,3));
+        assertFalse(actual);
+    }
+//    Sprawdź, czy metoda radzi sobie z sytuacją, gdy na danym polu nie ma trawy.
+@Test
+    void testKeepCalmAndEatGrass_NoGrassToEat() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        dayManager.rotateAndMoveAnimals();
+
+        dayManager.keepCalmAndEatGrass();
+
+        boolean actual = map.isGrassAt(new Vector2D(2,3));
+        assertFalse(actual);
+    }
+//    Sprawdź, czy metoda radzi sobie z sytuacją, gdy na danym polu nie ma zwierząt.
+    @Test
+    void testKeepCalmAndEatGrass_NoAnimalsAtPositionOfGrass() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        map.addGrass(new Vector2D(2,3));
+
+        dayManager.keepCalmAndEatGrass();
+
+        boolean actual = map.isGrassAt(new Vector2D(2,3));
+        assertTrue(actual);
+    }
+
+
     @Test
 //    Sprawdź, czy zwierzęta na odpowiednich pozycjach są wybierane do rozmnażania.
 //    Sprawdź, czy rozmnażanie odbywa się prawidłowo.

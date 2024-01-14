@@ -5,9 +5,7 @@ import agh.ics.oop.model.animal.Reproduction;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class DayManager {
     private final Map map;
@@ -90,14 +88,20 @@ public class DayManager {
 
 
     public void keepCalmAndEatGrass() {
-        for (Vector2D vector2D : map.getGrassHashMap().keySet()) {
+        // Tworzenie kopii zestawu kluczy
+        Set<Vector2D> keySetCopy = new HashSet<>(map.getGrassHashMap().keySet());
+
+        // Iterowanie po kopii zestawu kluczy
+        for (Vector2D vector2D : keySetCopy) {
             Animal animal = priorityBreedingFeedingMap.getTheBest(vector2D);
-            animal.haveEaten();
-            animal.changeEnergy(animal.getEnergy() + configurationData.energyFromPlant());
-            map.removeGrass(vector2D);
-            //
+            if (animal != null) {
+                animal.haveEaten();
+                animal.changeEnergy(animal.getEnergy() + configurationData.energyFromPlant());
+                map.removeGrass(vector2D);
+            }
         }
     }
+
 
     public void keepCalmAndReproduce() {
         for (Vector2D vector2D : map.getAnimalHashMap().keySet()) {

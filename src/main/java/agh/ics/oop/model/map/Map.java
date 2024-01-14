@@ -87,6 +87,13 @@ public class Map {
         return grassHashMap.get(position);
     }
 
+    public boolean isGrassAt(Vector2D position){
+        if (grassHashMap.get(position) == null){
+            return false;
+        }
+        return true;
+    }
+
     public void addAnimal(Vector2D position, Animal animal) {
         animalHashMap.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
     }
