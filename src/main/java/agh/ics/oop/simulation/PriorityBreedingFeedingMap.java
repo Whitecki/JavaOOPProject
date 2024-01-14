@@ -12,7 +12,7 @@ public class PriorityBreedingFeedingMap {
     public PriorityBreedingFeedingMap(HashMap<Vector2D, ArrayList<Animal>> priorityBreedingFeedingMap) {
         this.priorityBreedingFeedingMap = priorityBreedingFeedingMap;
     }
-
+    //trzeba dodać logike, bo tu jest tylko energia, bez reszty atrybutów XDD
     public void add(Vector2D vector2D, Animal animal) {
         ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.computeIfAbsent(vector2D, k -> new ArrayList<>());
         if (animalsAtPosition.isEmpty()) {

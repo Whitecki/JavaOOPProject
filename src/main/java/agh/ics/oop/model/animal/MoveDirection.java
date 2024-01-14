@@ -1,5 +1,7 @@
 package agh.ics.oop.model.animal;
 
+import java.util.Random;
+
 public enum MoveDirection {
     NORTH("0"),
     NORTH_EAST("1"),
@@ -46,6 +48,24 @@ public enum MoveDirection {
             case 7 -> NORTH_WEST;
             default -> throw new IllegalStateException("Unexpected value: " + value);
         };
+    }
+    public MoveDirection randomOtherThanThis(){
+        String a = MoveDirection.NORTH.name;
+        Random random = new Random();
+        int value1 = Integer.parseInt(name);
+        int value2 = random.nextInt(1,8);
+        int value = (value1+value2)%8;
+        return switch (value){
+            case 0 -> NORTH;
+            case 1 -> NORTH_EAST;
+            case 2 -> EAST;
+            case 3 -> SOUTH_EAST;
+            case 4 -> SOUTH;
+            case 5 -> SOUTH_WEST;
+            case 6 -> WEST;
+            case 7 -> NORTH_WEST;
+            default -> throw new IllegalStateException("Unexpected value: " + value);
+    };
     }
 
     public MoveDirection opposite() {

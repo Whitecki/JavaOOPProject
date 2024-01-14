@@ -9,7 +9,6 @@ public class RandomMutation implements MutationStrategy {
     @Override
     public void mutate(Genome genome, int indexOfGenToMutate) {
         Random random = new Random();
-        int newDirectionNumber = (genome.activeGenDirectionInt() + random.nextInt(1,genome.length())) % genome.length();
-        genome.setActiveGenNewDirection(MoveDirection.valueOf(String.valueOf(newDirectionNumber)));
+        genome.setGenNewDirection(genome.getGenome().get(indexOfGenToMutate).randomOtherThanThis(),indexOfGenToMutate);
     }
 }

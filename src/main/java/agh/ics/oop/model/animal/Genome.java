@@ -44,4 +44,8 @@ public class Genome {
     public void setActiveGenNewDirection(MoveDirection newDirection) {
         genome.set(activeGenomeIndex, newDirection);
     }
+
+    public void setGenNewDirection (MoveDirection moveDirection, int idx){
+        genome.set(idx,moveDirection);
+    }
 }

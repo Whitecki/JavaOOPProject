@@ -91,8 +91,8 @@ public class Animal {
         return energy;
     }
 
-    public void changeEnergy(int energy) {
-        this.energy = energy;
+    public void changeEnergy(int e) {
+        energy = energy + e;
     }
 
     public MoveDirection getDirection() {

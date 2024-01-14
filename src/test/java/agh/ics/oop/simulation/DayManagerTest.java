@@ -185,18 +185,70 @@ void removeDeathAnimals_ShouldRemoveAnimalsWithZeroEnergy() {
         assertTrue(actual);
     }
 
-
+//    Sprawdź, czy zwierzęta na odpowiednich pozycjach są wybierane odpowiednie zwierzęta do rozmnażania do rozmnażania.
     @Test
-//    Sprawdź, czy zwierzęta na odpowiednich pozycjach są wybierane do rozmnażania.
-//    Sprawdź, czy rozmnażanie odbywa się prawidłowo.
-//    Sprawdź, czy rozmnażanie nie odbywa się, gdy są niewystarczające warunki (np. brak energii).
-//    Sprawdź, czy nowe zwierzęta są dodawane do mapy.
-    void testKeepCalmAndReproduce() {
-        // Ustaw zwierzęta gotowe do rozmnażania
-        // Wywołaj metodę
+    void testKeepCalmAndReproduce_CorrectAnimalSelectionForBreeding() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal2 = new Animal(new Vector2D(2,2),27, MoveDirection.NORTH,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addAnimal(animal2.getPosition(),animal2);
+
+        dayManager.rotateAndMoveAnimals();
         dayManager.keepCalmAndReproduce();
-        // Sprawdź, czy doszło do rozmnażania
-        // ... asercje ...
+
+        int actualCount = animal2.getEnergy();
+        assertEquals(26,actualCount);
+        int actualCount3 = animal.getEnergy();
+        assertEquals(30,actualCount3);
+        int actualCount2 = animal1.getEnergy();
+        assertEquals(28,actualCount2);
+    }
+    //    Sprawdź, czy rozmnażanie nie odbywa się, gdy są niewystarczające warunki (np. brak energii).
+    @Test
+    void testKeepCalmAndReproduce_NoBreedingUnderInsufficientConditions() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,40,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal2 = new Animal(new Vector2D(2,2),27, MoveDirection.NORTH,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addAnimal(animal2.getPosition(),animal2);
+
+        dayManager.rotateAndMoveAnimals();
+        dayManager.keepCalmAndReproduce();
+
+        int actualCount = animal2.getEnergy();
+        assertEquals(26,actualCount);
+        int actualCount3 = animal.getEnergy();
+        assertEquals(31,actualCount3);
+        int actualCount2 = animal1.getEnergy();
+        assertEquals(29,actualCount2);
+    }
+    //    Sprawdź, czy nowe zwierzęta są dodawane do mapy.
+    @Test
+    void testKeepCalmAndReproduce_AdditionOfNewAnimalsToMap() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal2 = new Animal(new Vector2D(2,2),27, MoveDirection.NORTH,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addAnimal(animal2.getPosition(),animal2);
+
+        dayManager.rotateAndMoveAnimals();
+        dayManager.keepCalmAndReproduce();
+
+        int actual = map.getAnimalsAt(new Vector2D(2,3)).size();
+        assertEquals(4,actual);
     }
     @Test
 //    Sprawdź, czy rośliny są dodawane do mapy zgodnie ze strategią wzrostu.
