@@ -15,34 +15,34 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Map {
-    private final GrowthStrategy growthStrategy;
-    private final EdgeBehavior edgeBehavior;
-    private final HashMap<Vector2D, List<Animal>> animalHashMap = new HashMap<>();
-    private final HashMap<Vector2D, Grass> grassHashMap = new HashMap<>();
     private final int minX;
     private final int minY;
     private final int maxX;
     private final int maxY;
+    private final GrowthStrategy growthStrategy;
+    private final EdgeBehavior edgeBehavior;
+    private HashMap<Vector2D, List<Animal>> animalHashMap = new HashMap<>();
+    private final HashMap<Vector2D, Grass> grassHashMap = new HashMap<>();
     private final Vector2D lowerLeftBands;
     private final Vector2D upperRightBands;
     public Map(GrowthTypes growthTypes, AllEdges allEdges, int minX, int minY, int maxX, int maxY) {
-        this.growthStrategy = grow(growthTypes);
-        this.edgeBehavior = edge(allEdges);
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
         this.lowerLeftBands = new Vector2D(minX, minY);
         this.upperRightBands = new Vector2D(maxX, maxY);
+        this.growthStrategy = grow(growthTypes,maxX,maxY);
+        this.edgeBehavior = edge(allEdges,maxX,maxY);
     }
-    public GrowthStrategy grow(GrowthTypes growthTypes){
+    public GrowthStrategy grow(GrowthTypes growthTypes, int maxX, int maxY){
         return switch (growthTypes){
             case EquatorialGrowth -> new EquatorialGrowth();
             case NearToGrassGrowth -> new NearToGrassGrowth();
         };
     }
 
-    public EdgeBehavior edge(AllEdges allEdges){
+    public EdgeBehavior edge(AllEdges allEdges, int maxX, int maxY){
         return switch (allEdges){
             case GlobeEdgeBehavior -> new GlobeEdgeBehavior(0,0,maxX,maxY);
         };
@@ -110,6 +110,9 @@ public class Map {
 
     public HashMap<Vector2D, List<Animal>> getAnimalHashMap() {
         return animalHashMap;
+    }
+    public void setAnimalHashMap(HashMap<Vector2D, List<Animal>> animalHashMap) {
+        this.animalHashMap = animalHashMap;
     }
     public HashMap<Vector2D, Grass> getGrassHashMap() {
         return grassHashMap;

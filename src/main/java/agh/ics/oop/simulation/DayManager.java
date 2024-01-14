@@ -5,6 +5,7 @@ import agh.ics.oop.model.animal.Reproduction;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class DayManager {
     private final ConfigurationData configurationData;
     private final int day;
 
-    public DayManager(Map map, ConfigurationData configurationData,int day) {
+    public DayManager(Map map, ConfigurationData configurationData, int day) {
         this.map = map;
         this.configurationData = configurationData;
         this.day = day;
@@ -38,21 +39,55 @@ public class DayManager {
         }
     }
 
+    //    public void rotateAndMoveAnimals() {
+//        Iterator<List<Animal>>animalListsIterator = map.getAnimalHashMap().values().iterator();
+//        while(animalListsIterator.hasNext()){
+//            List<Animal> animalList = animalListsIterator.next();
+//            Iterator<Animal> iterator = animalList.iterator();
+//            while (iterator.hasNext()) {
+//                Animal animal = iterator.next();
+//                animal.rotateAndDecreaseEnergy();
+//                map.removeAnimal(animal.getPosition(),animal);
+//                if (map.getEdgeBehavior().isSpecialMove(animal.nextMove())) {
+//                    map.getEdgeBehavior().handleEdgeCrossing(animal);
+//                } else {
+//                    animal.setPosition(animal.nextMove());
+//                }
+//                map.addAnimal(animal.getPosition(), animal);
+//                priorityBreedingFeedingMap.add(animal.getPosition(), animal);
+//                iterator.remove();
+//            animalListsIterator.remove();
+//            ///trzeba osobno kurwwaaaaaaa
+//
+//            }
+//        }
+//    }
     public void rotateAndMoveAnimals() {
-        for (List<Animal> animalList : map.getAnimalHashMap().values()) {
-            for (Animal animal : animalList) {
+        List<Animal> plannedMoves = new ArrayList<>();
+
+        // Przemieszczenie zwierzaków
+        for (List<Animal> animalList : new ArrayList<>(map.getAnimalHashMap().values())) {
+            for (Animal animal : new ArrayList<>(animalList)) {
                 animal.rotateAndDecreaseEnergy();
-                animalList.remove(animal);
-                if (map.getEdgeBehavior().isSpecialMove(animal.nextMove())) {
+                Vector2D oldPosition = animal.getPosition();
+                Vector2D newPosition = animal.nextMove();
+                if (map.getEdgeBehavior().isSpecialMove(newPosition)) {
                     map.getEdgeBehavior().handleEdgeCrossing(animal);
                 } else {
                     animal.setPosition(animal.nextMove());
                 }
-                map.addAnimal(animal.getPosition(), animal);
-                priorityBreedingFeedingMap.add(animal.getPosition(), animal);
+                plannedMoves.add(animal);
             }
         }
+        HashMap<Vector2D, List<Animal>> animalHashMap = new HashMap<>();
+        map.setAnimalHashMap(animalHashMap);
+        // Wkładam nowe pozycje zwierzakó na nową HashMape
+        for (Animal animal : plannedMoves) {
+            map.addAnimal(animal.getPosition(), animal);
+            priorityBreedingFeedingMap.add(animal.getPosition(), animal);
+        }
     }
+
 
     public void keepCalmAndEatGrass() {
         for (Vector2D vector2D : map.getGrassHashMap().keySet()) {
@@ -70,7 +105,7 @@ public class DayManager {
             Animal animal2 = priorityBreedingFeedingMap.getSecondTheBest(vector2D);
             if (animal1.getEnergy() >= configurationData.energyToReproduce() && animal2.getEnergy() >= configurationData.energyToReproduce()) {
                 Reproduction reproduction = new Reproduction(animal1, animal2, configurationData.energyUsedToCreateChild(), configurationData.minMutationCount(), configurationData.maxMutationCount());
-                map.addAnimal(reproduction.getChild().getPosition(),reproduction.getChild());
+                map.addAnimal(reproduction.getChild().getPosition(), reproduction.getChild());
                 reproduction.getChild().Birth(day);
             }
         }

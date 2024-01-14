@@ -3,49 +3,51 @@ package agh.ics.oop.simulation;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Vector2D;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PriorityBreedingFeedingMap {
-    private final HashMap<Vector2D, Animal[]> priorityBreedingFeedingMap;
+    private final HashMap<Vector2D, ArrayList<Animal>> priorityBreedingFeedingMap;
 
-    public PriorityBreedingFeedingMap(HashMap<Vector2D, Animal[]> priorityBreedingFeedingMap) {
+    public PriorityBreedingFeedingMap(HashMap<Vector2D, ArrayList<Animal>> priorityBreedingFeedingMap) {
         this.priorityBreedingFeedingMap = priorityBreedingFeedingMap;
     }
 
     public void add(Vector2D vector2D, Animal animal) {
-        Animal[] animalsAtPosition = getAnimalsAtPosition(vector2D);
-        if (animalsAtPosition == null) return;
-
-        if (shouldReplaceFirstAnimal(animalsAtPosition, animal)) {
-            animalsAtPosition[0] = animal;
+        ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.computeIfAbsent(vector2D, k -> new ArrayList<>());
+        if (animalsAtPosition.isEmpty()) {
+            animalsAtPosition.add(animal);
+        } else if (animalsAtPosition.size() == 1) {
+            animalsAtPosition.add(animal);
+            animalsAtPosition.sort((a1, a2) -> Integer.compare(a2.getEnergy(), a1.getEnergy()));
+        } else if (shouldReplaceFirstAnimal(animalsAtPosition, animal)) {
+            animalsAtPosition.set(1,animalsAtPosition.get(0));
+            animalsAtPosition.set(0, animal);
         } else if (shouldReplaceSecondAnimal(animalsAtPosition, animal)) {
-            animalsAtPosition[1] = animal;
+            animalsAtPosition.set(1, animal);
         }
+
     }
 
     public Animal getTheBest(Vector2D vector2D) {
-        Animal[] animalsAtPosition = getAnimalsAtPosition(vector2D);
-        if (animalsAtPosition == null) return null;
+        ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
+        if (animalsAtPosition.isEmpty()) return null;
 
-        return animalsAtPosition[0].getEnergy() >= animalsAtPosition[1].getEnergy() ? animalsAtPosition[0] : animalsAtPosition[1];
+        return animalsAtPosition.get(0);
     }
 
     public Animal getSecondTheBest(Vector2D vector2D) {
-        Animal[] animalsAtPosition = getAnimalsAtPosition(vector2D);
-        if (animalsAtPosition == null) return null;
+        ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
+        if (animalsAtPosition.size() < 2) return null;
 
-        return animalsAtPosition[0].getEnergy() < animalsAtPosition[1].getEnergy() ? animalsAtPosition[0] : animalsAtPosition[1];
+        return animalsAtPosition.get(1);
     }
 
-    private boolean shouldReplaceFirstAnimal(Animal[] animals, Animal newAnimal) {
-        return animals[0].getEnergy() < animals[1].getEnergy() && animals[0].getEnergy() < newAnimal.getEnergy();
+    private boolean shouldReplaceFirstAnimal(ArrayList<Animal> animals, Animal newAnimal) {
+        return animals.get(0).getEnergy() < newAnimal.getEnergy();
     }
 
-    private boolean shouldReplaceSecondAnimal(Animal[] animals, Animal newAnimal) {
-        return animals[0].getEnergy() > animals[1].getEnergy() && animals[1].getEnergy() < newAnimal.getEnergy();
-    }
-
-    private Animal[] getAnimalsAtPosition(Vector2D vector2D) {
-        return priorityBreedingFeedingMap.getOrDefault(vector2D, null);
+    private boolean shouldReplaceSecondAnimal(ArrayList<Animal> animals, Animal newAnimal) {
+        return animals.get(1).getEnergy() < newAnimal.getEnergy();
     }
 }

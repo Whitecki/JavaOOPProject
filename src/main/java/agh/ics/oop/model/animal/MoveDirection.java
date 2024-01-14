@@ -29,7 +29,23 @@ public enum MoveDirection {
     }
 
     public MoveDirection rotate(MoveDirection other){
-        return MoveDirection.valueOf(String.valueOf((Integer.parseInt(name) + Integer.parseInt(other.name()))%8));
+        String a = MoveDirection.NORTH.name;
+        String b = MoveDirection.EAST.name;
+        String c = other.name;
+        int value1 = Integer.parseInt(name);
+        int value2 = Integer.parseInt(other.name);
+        int value = (value1+value2)%8;
+        return switch (value){
+            case 0 -> NORTH;
+            case 1 -> NORTH_EAST;
+            case 2 -> EAST;
+            case 3 -> SOUTH_EAST;
+            case 4 -> SOUTH;
+            case 5 -> SOUTH_WEST;
+            case 6 -> WEST;
+            case 7 -> NORTH_WEST;
+            default -> throw new IllegalStateException("Unexpected value: " + value);
+        };
     }
 
     public MoveDirection opposite() {

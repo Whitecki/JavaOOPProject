@@ -2,6 +2,7 @@ package agh.ics.oop.model.animal;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Vector2D {
     private final int x;
@@ -44,6 +45,23 @@ public class Vector2D {
      *
      * @return a list of adjacent vectors
      */
+
+    @Override
+    public boolean equals(Object other){
+        if (this==other){
+            return true;
+        }
+        if (!(other instanceof Vector2D that)){
+            return false;
+        }
+        return this.x==that.x && this.y==that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.x, this.y);
+    }
+
     public List<Vector2D> around() {
         return Arrays.asList(
                 new Vector2D(x - 1, y - 1), new Vector2D(x - 1, y), new Vector2D(x - 1, y + 1),
