@@ -4,6 +4,7 @@ import agh.ics.oop.model.behavior.AllAnimalBehaviors;
 import agh.ics.oop.model.mutation.AllMutations;
 import agh.ics.oop.simulation.ConfigurationData;
 import agh.ics.oop.simulation.Simulation;
+import javafx.application.Application;
 
 import static agh.ics.oop.model.behavior.AllAnimalBehaviors.FullPredestination;
 import static agh.ics.oop.model.edge.AllEdges.GlobeEdgeBehavior;
@@ -18,6 +19,6 @@ public class World {
         1, 1, 3, RandomMutation, 8,
          FullPredestination);
         Simulation simulation = new Simulation(config);
-        simulation.startSimulation();
+        Application.launch(SimulationApp.class, args);
     }
 }

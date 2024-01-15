@@ -7,11 +7,12 @@ import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.visualization.ConsoleMapDisplay;
 import agh.ics.oop.model.visualization.MapChangeListener;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Simulation {
+public class Simulation implements Runnable{
     private final ConfigurationData cD;
     private final Map map;
     private final Random random = new Random();
@@ -46,8 +47,16 @@ public class Simulation {
     public void startSimulation() {
 
         for (int i = 0; i < 10; i++) {
-            DayManager dayManager = new DayManager(map, cD, i);
-            dayManager.run();
+            int j = i;
+            Platform.runLater(() -> {
+                DayManager dayManager = new DayManager(map, cD, j);
+                dayManager.run();
+            });
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     public Genome generateRandomGenome(){
@@ -61,8 +70,12 @@ public class Simulation {
     }
 
 
+    @Override
+    public void run() {
+        startSimulation();
+    }
 
-
-
-
+    public Map getMap() {
+        return map;
+    }
 }
