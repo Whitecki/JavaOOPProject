@@ -5,6 +5,8 @@ import agh.ics.oop.model.animal.Genome;
 import agh.ics.oop.model.animal.MoveDirection;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
+import agh.ics.oop.model.visualization.ConsoleMapDisplay;
+import agh.ics.oop.model.visualization.MapChangeListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -19,7 +21,9 @@ public class Simulation {
         this.map = new Map(cD.growthTypes(), cD.allEdges(), 0, 0, cD.mapWidth(), cD.mapHeight());
         putInitialGrass();
         putInitialAnimals();
-        startSimulation();
+        MapChangeListener listener = new ConsoleMapDisplay();
+        map.subscribe(listener);
+        map.notify("start");
     }
     public void putInitialGrass(){
         int[] randomHeight = RandomUniqueValues.generateRandomUniqueValues(0, cD.mapHeight()+1, cD.initialPlantCount()).stream().mapToInt(i -> i).toArray();
@@ -39,8 +43,9 @@ public class Simulation {
             map.addAnimal(newVector,new Animal(newVector, cD.initialAnimalEnergy(),randomDirection, generateRandomGenome(), cD.allMutations(), cD.allAnimalBehaviors()));
         }
     }
-    private void startSimulation() {
-        for (int i = 0; i < 5; i++) {
+    public void startSimulation() {
+
+        for (int i = 0; i < 10; i++) {
             DayManager dayManager = new DayManager(map, cD, i);
             dayManager.run();
         }

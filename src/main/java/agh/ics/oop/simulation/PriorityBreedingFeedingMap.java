@@ -2,6 +2,7 @@ package agh.ics.oop.simulation;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Vector2D;
+import agh.ics.oop.model.map.WorldElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,20 +27,25 @@ public class PriorityBreedingFeedingMap {
         } else if (shouldReplaceSecondAnimal(animalsAtPosition, animal)) {
             animalsAtPosition.set(1, animal);
         }
+    }
 
+    public boolean isTheBestOnField(Vector2D vector2D){
+        ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
+        return !animalsAtPosition.isEmpty();
     }
 
     public Animal getTheBest(Vector2D vector2D) {
         ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
-        if (animalsAtPosition.isEmpty()) return null;
-
+        //return null trzeba zmienić
         return animalsAtPosition.get(0);
     }
 
+    public boolean isSecondTheBest(Vector2D vector2D){
+        ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
+        return animalsAtPosition.size() > 1;
+    }
     public Animal getSecondTheBest(Vector2D vector2D) {
         ArrayList<Animal> animalsAtPosition = priorityBreedingFeedingMap.getOrDefault(vector2D, new ArrayList<>());
-        if (animalsAtPosition.size() < 2) return null;
-
         return animalsAtPosition.get(1);
     }
 

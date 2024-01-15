@@ -26,6 +26,8 @@ public class DayManager {
         keepCalmAndEatGrass();
         keepCalmAndReproduce();
         newPlantsGrowth();
+        map.notify("map has been changed");
+
     }
 
     public void removeDeathAnimals() {
@@ -93,11 +95,13 @@ public class DayManager {
 
         // Iterowanie po kopii zestawu kluczy
         for (Vector2D vector2D : keySetCopy) {
-            Animal animal = priorityBreedingFeedingMap.getTheBest(vector2D);
-            if (animal != null) {
-                animal.haveEaten();
-                animal.changeEnergy(animal.getEnergy() + configurationData.energyFromPlant());
-                map.removeGrass(vector2D);
+            if (priorityBreedingFeedingMap.isTheBestOnField(vector2D)){
+                Animal animal = priorityBreedingFeedingMap.getTheBest(vector2D);
+                if (animal != null) {
+                    animal.haveEaten();
+                    animal.changeEnergy(animal.getEnergy() + configurationData.energyFromPlant());
+                    map.removeGrass(vector2D);
+            }
             }
         }
     }
@@ -105,12 +109,14 @@ public class DayManager {
 
     public void keepCalmAndReproduce() {
         for (Vector2D vector2D : map.getAnimalHashMap().keySet()) {
-            Animal animal1 = priorityBreedingFeedingMap.getTheBest(vector2D);
-            Animal animal2 = priorityBreedingFeedingMap.getSecondTheBest(vector2D);
-            if (animal1.getEnergy() >= configurationData.energyToReproduce() && animal2.getEnergy() >= configurationData.energyToReproduce()) {
-                Reproduction reproduction = new Reproduction(animal1, animal2, configurationData.energyUsedToCreateChild(), configurationData.minMutationCount(), configurationData.maxMutationCount());
-                map.addAnimal(reproduction.getChild().getPosition(), reproduction.getChild());
-                reproduction.getChild().Birth(day);
+            if (priorityBreedingFeedingMap.isSecondTheBest(vector2D)){
+                Animal animal1 = priorityBreedingFeedingMap.getTheBest(vector2D);
+                Animal animal2 = priorityBreedingFeedingMap.getSecondTheBest(vector2D);
+                if (animal1.getEnergy() >= configurationData.energyToReproduce() && animal2.getEnergy() >= configurationData.energyToReproduce()) {
+                    Reproduction reproduction = new Reproduction(animal1, animal2, configurationData.energyUsedToCreateChild(), configurationData.minMutationCount(), configurationData.maxMutationCount());
+                    map.addAnimal(reproduction.getChild().getPosition(), reproduction.getChild());
+                    reproduction.getChild().Birth(day);
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ import agh.ics.oop.model.growth.EquatorialGrowth;
 import agh.ics.oop.model.growth.GrowthStrategy;
 import agh.ics.oop.model.growth.GrowthTypes;
 import agh.ics.oop.model.growth.NearToGrassGrowth;
+import agh.ics.oop.model.visualization.MapChangeListener;
+import agh.ics.oop.model.visualization.MapVisualizer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,9 @@ public class Map {
     private final HashMap<Vector2D, Grass> grassHashMap = new HashMap<>();
     private final Vector2D lowerLeftBands;
     private final Vector2D upperRightBands;
+    private final List<MapChangeListener> listeners = new ArrayList<>();
+    private MapVisualizer drawmap = new MapVisualizer(this);
+
     public Map(GrowthTypes growthTypes, AllEdges allEdges, int minX, int minY, int maxX, int maxY) {
         this.minX = minX;
         this.minY = minY;
@@ -125,4 +130,24 @@ public class Map {
         return grassHashMap;
     }
 
+    public WorldElement objectAt(Vector2D position){
+        if(animalHashMap.get(position) != null){
+            return animalHashMap.get(position).get(0); ////chuj
+        }
+        else{
+            return grassHashMap.get(position);
+        }
+    }
+    public void subscribe(MapChangeListener observer){
+        listeners.add(observer);
+    }
+    public void notify(String message){
+        for (MapChangeListener observer : listeners) {
+            observer.mapChanged(this, message);
+        }
+    }
+
+    public String toString() {
+        return this.drawmap.draw(lowerLeftBands, upperRightBands);
+    }
 }

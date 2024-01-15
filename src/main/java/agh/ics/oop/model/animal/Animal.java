@@ -1,5 +1,6 @@
 package agh.ics.oop.model.animal;
 
+import agh.ics.oop.model.map.WorldElement;
 import agh.ics.oop.model.behavior.AllAnimalBehaviors;
 import agh.ics.oop.model.behavior.BehaviorStrategy;
 import agh.ics.oop.model.behavior.FullPredestination;
@@ -8,7 +9,7 @@ import agh.ics.oop.model.mutation.MutationStrategy;
 import agh.ics.oop.model.mutation.RandomMutation;
 import agh.ics.oop.model.mutation.SlightAdjustmentMutation;
 
-public class Animal {
+public class Animal implements WorldElement{
     private final MutationStrategy mutationStrategy;
     private final BehaviorStrategy behaviorStrategy;
     private final Genome genom;
@@ -129,6 +130,10 @@ public class Animal {
     public void rotateAndDecreaseEnergy() {
         direction = direction.rotate(genom.getActiveGen());
         energy --;
+    }
+
+    public String toString(){
+        return "@";
     }
 
 }
