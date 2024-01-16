@@ -1,6 +1,7 @@
 package agh.ics.oop.model.animal;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Genome {
     private final ArrayList<MoveDirection> genome;
@@ -22,19 +23,13 @@ public class Genome {
         return activeGenomeIndex;
     }
 
+    public void setActiveGenomeToNextIndex(){activeGenomeIndex = (activeGenomeIndex+1)%genome.size();}
+
     public void setActiveGenomeIndex(int activeGenomeIndex) {
         if (activeGenomeIndex < 0 || activeGenomeIndex >= genome.size()) {
             throw new IllegalArgumentException("Index poza zakresem genomu");
         }
         this.activeGenomeIndex = activeGenomeIndex;
-    }
-
-    public int activeGenDirectionInt() {
-        try {
-            return Integer.parseInt(getActiveGen().name());
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException("Nie można przekonwertować kierunku na liczbę całkowitą");
-        }
     }
 
     public int length() {

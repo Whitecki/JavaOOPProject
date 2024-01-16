@@ -92,16 +92,18 @@ public class Animal implements WorldElement{
         return energy;
     }
 
-    public void changeEnergy(int e) {
-        energy = energy + e;
-    }
-
     public MoveDirection getDirection() {
         return direction;
     }
 
     public void setDirection(MoveDirection direction) {
         this.direction = direction;
+    }
+
+    public void setNewDirection(){direction = genom.getActiveGen();}
+
+    public void changeEnergy(int e) {
+        energy = energy + e;
     }
 
     /**

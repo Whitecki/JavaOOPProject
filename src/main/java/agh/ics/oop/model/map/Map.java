@@ -88,10 +88,6 @@ public class Map {
         return animalHashMap.get(position);
     }
 
-    public Grass getGrassAt(Vector2D position) {
-        return grassHashMap.get(position);
-    }
-
     public boolean isGrassAt(Vector2D position){
         if (grassHashMap.get(position) == null){
             return false;

@@ -31,12 +31,7 @@ public enum MoveDirection {
     }
 
     public MoveDirection rotate(MoveDirection other){
-        String a = MoveDirection.NORTH.name;
-        String b = MoveDirection.EAST.name;
-        String c = other.name;
-        int value1 = Integer.parseInt(name);
-        int value2 = Integer.parseInt(other.name);
-        int value = (value1+value2)%8;
+        int value = (Integer.parseInt(name)+Integer.parseInt(other.name))%8;
         return switch (value){
             case 0 -> NORTH;
             case 1 -> NORTH_EAST;

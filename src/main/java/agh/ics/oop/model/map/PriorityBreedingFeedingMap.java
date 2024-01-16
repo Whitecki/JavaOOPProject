@@ -1,4 +1,4 @@
-package agh.ics.oop.simulation;
+package agh.ics.oop.model.map;
 
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Vector2D;

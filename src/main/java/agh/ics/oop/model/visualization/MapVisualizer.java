@@ -2,7 +2,7 @@ package agh.ics.oop.model.visualization;
 
 import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.animal.Vector2D;
-import agh.ics.oop.simulation.PriorityBreedingFeedingMap;
+import agh.ics.oop.model.map.PriorityBreedingFeedingMap;
 public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";

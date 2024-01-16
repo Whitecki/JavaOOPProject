@@ -5,6 +5,7 @@ import agh.ics.oop.model.animal.Genome;
 import agh.ics.oop.model.animal.MoveDirection;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
+import agh.ics.oop.model.until.RandomVector2DGenerator;
 import agh.ics.oop.model.visualization.ConsoleMapDisplay;
 import agh.ics.oop.model.visualization.MapChangeListener;
 import javafx.application.Platform;
@@ -27,21 +28,29 @@ public class Simulation implements Runnable{
         map.notify("start");
     }
     public void putInitialGrass(){
-        int[] randomHeight = RandomUniqueValues.generateRandomUniqueValues(0, cD.mapHeight(), cD.initialPlantCount()).stream().mapToInt(i -> i).toArray();
-        int[] randomWidth = RandomUniqueValues.generateRandomUniqueValues(0, cD.mapWidth(), cD.initialPlantCount()).stream().mapToInt(i -> i).toArray();
-        for (int i = 0; i < cD.initialPlantCount(); i++) {
-            Vector2D newVector = new Vector2D(randomWidth[i],randomHeight[i]);
-            map.addGrass(newVector);
+        ArrayList<Vector2D> allPossibleFields = new ArrayList<>();
+        for (int i = 0; i <= cD.mapWidth(); i++) {
+            for(int j = 0; j <= cD.mapHeight(); j++){
+                allPossibleFields.add(new Vector2D(i,j));
+            }
+        }
+        RandomVector2DGenerator randomGrassGenerator = new RandomVector2DGenerator(map,allPossibleFields, cD.initialPlantCount());
+        for (Vector2D vector2D: randomGrassGenerator) {
+            map.addGrass(vector2D);
         }
     }
 
     public void putInitialAnimals(){
-        int[] randomHeight = RandomUniqueValues.generateRandomUniqueValues(0, cD.mapHeight(), cD.initialAnimalCount()).stream().mapToInt(i -> i).toArray();
-        int[] randomWidth = RandomUniqueValues.generateRandomUniqueValues(0, cD.mapWidth(), cD.initialAnimalCount()).stream().mapToInt(i -> i).toArray();
-        for (int i = 0; i < cD.initialAnimalCount(); i++) {
-            Vector2D newVector = new Vector2D(randomWidth[i],randomHeight[i]);
+        ArrayList<Vector2D> allPossibleFields = new ArrayList<>();
+        for (int i = 0; i <= cD.mapWidth(); i++) {
+            for(int j = 0; j <= cD.mapHeight(); j++){
+                allPossibleFields.add(new Vector2D(i,j));
+            }
+        }
+        RandomVector2DGenerator randomGrassGenerator = new RandomVector2DGenerator(map,allPossibleFields, cD.initialAnimalCount());
+        for (Vector2D vector2D: randomGrassGenerator) {
             MoveDirection randomDirection = MoveDirection.values()[random.nextInt(MoveDirection.values().length)];
-            map.addAnimal(newVector,new Animal(newVector, cD.initialAnimalEnergy(),randomDirection, generateRandomGenome(), cD.allMutations(), cD.allAnimalBehaviors()));
+            map.addAnimal(vector2D,new Animal(vector2D, cD.initialAnimalEnergy(),randomDirection, generateRandomGenome(), cD.allMutations(), cD.allAnimalBehaviors()));
         }
     }
     public void startSimulation() {

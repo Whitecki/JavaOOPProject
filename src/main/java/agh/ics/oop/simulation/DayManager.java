@@ -4,6 +4,7 @@ import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Reproduction;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
+import agh.ics.oop.model.map.PriorityBreedingFeedingMap;
 
 import java.util.*;
 
@@ -39,29 +40,6 @@ public class DayManager {
         }
     }
 
-    //    public void rotateAndMoveAnimals() {
-//        Iterator<List<Animal>>animalListsIterator = map.getAnimalHashMap().values().iterator();
-//        while(animalListsIterator.hasNext()){
-//            List<Animal> animalList = animalListsIterator.next();
-//            Iterator<Animal> iterator = animalList.iterator();
-//            while (iterator.hasNext()) {
-//                Animal animal = iterator.next();
-//                animal.rotateAndDecreaseEnergy();
-//                map.removeAnimal(animal.getPosition(),animal);
-//                if (map.getEdgeBehavior().isSpecialMove(animal.nextMove())) {
-//                    map.getEdgeBehavior().handleEdgeCrossing(animal);
-//                } else {
-//                    animal.setPosition(animal.nextMove());
-//                }
-//                map.addAnimal(animal.getPosition(), animal);
-//                priorityBreedingFeedingMap.add(animal.getPosition(), animal);
-//                iterator.remove();
-//            animalListsIterator.remove();
-//            ///trzeba osobno kurwwaaaaaaa
-//
-//            }
-//        }
-//    }
     public void rotateAndMoveAnimals() {
         List<Animal> plannedMoves = new ArrayList<>();
 
@@ -122,6 +100,6 @@ public class DayManager {
     }
 
     public void newPlantsGrowth() {
-        map.getGrowthStrategy().growPlants(map);
+        map.getGrowthStrategy().growPlants(map,configurationData.dailyPlantGrowth());
     }
 }

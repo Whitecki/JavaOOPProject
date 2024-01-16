@@ -5,7 +5,6 @@ import agh.ics.oop.model.animal.Vector2D;
 public class Grass implements WorldElement {
     private int energy;
     private Vector2D position;
-
     public Grass(Vector2D position) {
         this.position = position;
     }

@@ -1,16 +1,15 @@
 package agh.ics.oop.model.growth;
 
-import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.map.Map;
+import agh.ics.oop.model.until.RandomVector2DGenerator;
 
 import java.util.ArrayList;
 
 public class NearToGrassGrowth implements GrowthStrategy {
     private ArrayList<Vector2D> nwm = new ArrayList<>();
-
     @Override
-    public void growPlants(Map map) {
+    public void growPlants(Map map,int numberOfGrassToGrowth) {
         for (int i = map.getMinX(); i <= map.getMaxX(); i++) {
             for (int j = map.getMinY(); j <= map.getMaxY(); j++) {
                 if (!map.getGrassHashMap().containsKey(new Vector2D(i, j))) {
@@ -24,7 +23,7 @@ public class NearToGrassGrowth implements GrowthStrategy {
                 }
             }
         }
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(map, nwm);
+        RandomVector2DGenerator randomPositionGenerator = new RandomVector2DGenerator(map, nwm,numberOfGrassToGrowth);
         for (Vector2D grassPosition : randomPositionGenerator) {
             map.addGrass(grassPosition);
         }
