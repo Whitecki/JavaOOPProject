@@ -13,8 +13,6 @@
             <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
             <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER"/>
             <Label fx:id="mapLabel" textAlignment="CENTER"/>
-            <Label fx:id="moveDescriptionLabel" alignment="CENTER" />
-            <Label fx:id="bounds" alignment="CENTER"/>
             <Button fx:id="startButton" text="START" alignment="CENTER" onAction="#onSimulationStartClicked"> </Button>
         </VBox>
     </center>

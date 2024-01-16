@@ -14,11 +14,6 @@ import static agh.ics.oop.model.mutation.AllMutations.RandomMutation;
 
 public class World {
     public static void main(String[] args) {
-        ConfigurationData config = new ConfigurationData(10, 10, GlobeEdgeBehavior , 6,
-        2, 2, NearToGrassGrowth, 5, 12, 2,
-        1, 1, 3, RandomMutation, 8,
-         FullPredestination);
-        Simulation simulation = new Simulation(config);
         Application.launch(SimulationApp.class, args);
     }
 }

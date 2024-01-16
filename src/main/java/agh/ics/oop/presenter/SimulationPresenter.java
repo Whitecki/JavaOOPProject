@@ -1,5 +1,7 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.visualization.MapChangeListener;
 import agh.ics.oop.simulation.ConfigurationData;
@@ -14,13 +16,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
+import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
-
-import static agh.ics.oop.model.behavior.AllAnimalBehaviors.FullPredestination;
-import static agh.ics.oop.model.edge.AllEdges.GlobeEdgeBehavior;
-import static agh.ics.oop.model.growth.GrowthTypes.NearToGrassGrowth;
-import static agh.ics.oop.model.mutation.AllMutations.RandomMutation;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -29,18 +30,35 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
     @FXML
-    private Label moveDescriptionLabel;
-    @FXML
     private Label infoLabel;
-
-    @FXML
-    private Label mapLabel;
-
-    @FXML
-    private TextField moveList;
+    private ConfigurationData configurationData;
     Map map;
+    private int CELL_WIDTH = 400;
+    private int CELL_HEIGHT = 400;
+    private int height;
+    private int width;
+    private int cellSize;
+
+    public void setConfigurationData(ConfigurationData configurationData){
+        this.configurationData = configurationData;
+        this.height = configurationData.mapHeight();
+        this.width = configurationData.mapWidth();
+    }
     public void setWorldMap(Map map) {
         this.map = map;
+    }
+
+    private int calculateCellSize(){
+        int maxCellWidth = this.CELL_WIDTH / (width);
+        int maxCellHeight = this.CELL_HEIGHT/ (height);
+        return Math.min(maxCellWidth, maxCellHeight);
+    }
+
+    private Vector2D vectorOnGrid(Vector2D vector2d){
+        int y = map.getUpperRightBands().getY() - vector2d.getY() + 1;
+        int x = vector2d.getX()  - map.getLowerLeftBands().getX() + 1;
+
+        return new Vector2D(x,y);
     }
 
     private void clearGrid() {
@@ -51,27 +69,64 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getRowConstraints().add(new RowConstraints(50));
     }
 
-    private void drawMap() {
+    public Circle getGrassColor(){
+        Circle circle = new Circle(this.cellSize/2);
+        circle.setFill(Color.GREEN);
+        return circle;
+    }
+
+    public Circle getAnimalColor(Animal animal){
+        Circle circle = new Circle(this.cellSize/2);
+        int animalEnergy = animal.getEnergy();
+        if(animalEnergy <= 0.2*configurationData.initialAnimalEnergy()){
+            circle.setFill(Color.VIOLET.darker());
+        } else if (animalEnergy <= 0.5*configurationData.initialAnimalEnergy()) {
+            circle.setFill(Color.VIOLET);
+        } else if (animalEnergy <= 0.8*configurationData.initialAnimalEnergy()) {
+            circle.setFill(Color.PINK.darker());
+        }else {
+            circle.setFill(Color.PINK);
+        }
+        return circle;
+    }
+    public void drawMap2() {
+        this.clearGrid();
+
+        mapGrid.minHeight(height);
+        mapGrid.minWidth(width);
+        this.cellSize = this.calculateCellSize();
+
+        drawFrame(map.getLowerLeftBands(), map.getUpperRightBands());
+        HashMap<Vector2D, List<Animal>> animalHashMap = map.getAnimalHashMap();
+        HashMap<Vector2D, Grass> grassHashMap = map.getGrassHashMap();
+
+        for (Vector2D vector : grassHashMap.keySet()) {
+            Vector2D gridVector = vectorOnGrid(vector);
+            mapGrid.add(getGrassColor(), gridVector.getX(), gridVector.getY());
+        }
+        for (Vector2D vector : animalHashMap.keySet()) {
+            Vector2D gridVector = vectorOnGrid(vector);
+            mapGrid.add(getAnimalColor(animalHashMap.get(vector).get(0)), gridVector.getX(), gridVector.getY());
+        }
+    }
+
+
+
+
+    void drawMap() {
         clearGrid();
         draw(map.getLowerLeftBands(), map.getUpperRightBands());
     };
 
     @Override
     public void mapChanged(Map worldMap, String message) {
-        drawMap();
-        moveDescriptionLabel.setText(message);
-        bounds.setText(map.getLowerLeftBands().toString() + map.getUpperRightBands().toString());
-
+        drawMap2();
     }
 
     @FXML
     private void onSimulationStartClicked() throws InterruptedException {
         infoLabel.setVisible(false);
-        ConfigurationData config = new ConfigurationData(10, 10, GlobeEdgeBehavior , 6,
-                2, 2, NearToGrassGrowth, 5, 12, 2,
-                1, 1, 3, RandomMutation, 8,
-                FullPredestination);
-        Simulation simulation = new Simulation(config);
+        Simulation simulation = new Simulation(configurationData);
         MapChangeListener listener = new ConsoleMapDisplay();
         Map simulationMap = simulation.getMap();
         this.setWorldMap(simulationMap);
@@ -82,8 +137,7 @@ public class SimulationPresenter implements MapChangeListener {
         new Thread(() -> {
             engine.run();
             Platform.runLater(() -> {
-                moveDescriptionLabel.setText("Simulation ended");
-                drawMap();
+                drawMap2();
             });
         }).start();
     }
@@ -117,16 +171,14 @@ public class SimulationPresenter implements MapChangeListener {
         int height = y1-y0;
         mapGrid.add(new Label("y/x"), 0, 0);
         for(int i = 1; i <= width + 1; i++){
-            ColumnConstraints column = new ColumnConstraints();
-            column.setPrefWidth(50);
+            ColumnConstraints column = new ColumnConstraints(cellSize);
             mapGrid.getColumnConstraints().add(column);
             mapGrid.add(new Label(String.valueOf(x0)), i, 0);
             x0++;
         }
 
         for(int i = 1 ; i <= height + 1; i++){
-            RowConstraints row = new RowConstraints();
-            row.setPrefHeight(50);
+            RowConstraints row = new RowConstraints(cellSize);
             mapGrid.getRowConstraints().add(row);
             mapGrid.add(new Label(String.valueOf(y1)),0, i);
             y1--;
