@@ -1,6 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.app.SimulationApp;
+import agh.ics.oop.app.StatsSaver;
 import agh.ics.oop.model.behavior.AllAnimalBehaviors;
 import agh.ics.oop.model.edge.AllEdges;
 import agh.ics.oop.model.growth.GrowthTypes;
@@ -20,57 +21,42 @@ import java.io.IOException;
 public class ParametersPresenter {
 
     @FXML
-    public ComboBox behaviorVariantBox;
-    private int CELL_WIDTH = 40;
-    private int CELL_HEIGHT = 40;
-
+    private ComboBox behaviorVariantBox;
     @FXML
-    public Spinner heightSpinner;
-
+    private Spinner heightSpinner;
     @FXML
-    public Spinner widthSpinner;
-
+    private Spinner widthSpinner;
     @FXML
-    public Spinner animalsNumSpinner;
-
+    private Spinner animalsNumSpinner;
     @FXML
-    public Spinner plantNumSpinner;
-
+    private Spinner plantNumSpinner;
     @FXML
-    public Spinner dailyPlantsNumSpinner;
-
+    private Spinner dailyPlantsNumSpinner;
     @FXML
-    public ComboBox mapVariantBox;
-
+    private ComboBox mapVariantBox;
     @FXML
-    public Spinner animalStartEnergySpinner;
-
+    private Spinner animalStartEnergySpinner;
     @FXML
-    public Spinner animalReproduceEnergySpinner;
-
+    private Spinner animalReproduceEnergySpinner;
     @FXML
-    public Spinner animalLostToReproduceEnergySpinner;
-
+    private Spinner animalLostToReproduceEnergySpinner;
     @FXML
-    public Spinner startPlantsSpinner;
-
+    private Spinner startPlantsSpinner;
     @FXML
-    public Spinner genomLengthSpinner;
-
+    private Spinner genomLengthSpinner;
     @FXML
-    public Spinner minMutationSpinner;
-
+    private Spinner minMutationSpinner;
     @FXML
-    public Spinner maxMutationSpinner;
-
+    private Spinner maxMutationSpinner;
     @FXML
-    public ComboBox genomVariantBox;
+    private ComboBox genomVariantBox;
     @FXML
-    public ComboBox plantVariantBox;
+    private ComboBox plantVariantBox;
     @FXML
-    public CheckBox fileSaving;
+    private CheckBox fileSaving;
     @FXML
-    public Spinner animalEatEnergySpinner;
+    private Spinner animalEatEnergySpinner;
+    private boolean saveStats;
 
     @FXML
     private void onSimulationStartClicked() throws IOException {
@@ -96,8 +82,14 @@ public class ParametersPresenter {
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
         SimulationApp simulationApp = new SimulationApp();
-        presenter.setConfigurationData(configurationData);
-        simulationApp.configureStage(secondStage, viewRoot); // Wykorzystaj metodę configureStage z SimulationApp
+        if(fileSaving.isSelected()){
+            saveStats = true;
+        }
+        else{
+            saveStats = false;
+        }
+        presenter.setConfigurationData(configurationData, saveStats);
+        simulationApp.configureStage(secondStage, viewRoot);
         secondStage.show();
     }
 }

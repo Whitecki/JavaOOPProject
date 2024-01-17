@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class FullPredestination implements BehaviorStrategy {
     public void performAction(HashMap<Vector2D, Animal> animalHashMap) {
         for (Animal animal: animalHashMap.values()){
-            animal.getGenome().setActiveGenomeToNextIndex();
+            animal.getGenom().setActiveGenomeToNextIndex();
             animal.setNewDirection();
         }
     }

@@ -9,55 +9,57 @@ import agh.ics.oop.model.mutation.MutationStrategy;
 import agh.ics.oop.model.mutation.RandomMutation;
 import agh.ics.oop.model.mutation.SlightAdjustmentMutation;
 
-public class Animal implements WorldElement {
+public class Animal implements WorldElement{
     private final MutationStrategy mutationStrategy;
     private final BehaviorStrategy behaviorStrategy;
-    private final Genome genome;
+    private final Genome genom;
     private Vector2D position;
     private int energy;
     private MoveDirection direction;
-    private int numberOfChildren = 0;
-    private int numberOfEatenGrass = 0;
+    private int numberOfChilds;
+    private int numberOfEatenGrass;
     private int dayOfBirth;
     private int dayOfDeath;
 
-    public Animal(Vector2D position, int energy, MoveDirection direction, Genome genome, AllMutations allMutations, AllAnimalBehaviors allAnimalBehaviors) {
+    public Animal(Vector2D position, int energy, MoveDirection direction, Genome genom, AllMutations allMutations, AllAnimalBehaviors allAnimalBehaviors) {
         this.position = position;
         this.energy = energy;
         this.direction = direction;
-        this.genome = genome;
+        this.genom = genom;
         this.mutationStrategy = mutation(allMutations);
-        this.behaviorStrategy = behave(allAnimalBehaviors);
+        this.behaviorStrategy = behav(allAnimalBehaviors);
+        this.numberOfChilds = 0;
+        this.numberOfChilds = 0;
     }
-
-    public Animal(Vector2D position, int energy, MoveDirection direction, Genome genome, MutationStrategy mutationStrategy, BehaviorStrategy behaviorStrategy) {
+    public Animal(Vector2D position, int energy, MoveDirection direction, Genome genom, MutationStrategy mutationStrategy, BehaviorStrategy behaviorStrategy) {
         this.position = position;
         this.energy = energy;
         this.direction = direction;
-        this.genome = genome;
+        this.genom = genom;
         this.mutationStrategy = mutationStrategy;
         this.behaviorStrategy = behaviorStrategy;
+        this.numberOfChilds = 0;
+        this.numberOfChilds = 0;
     }
-
-    private MutationStrategy mutation(AllMutations allMutations) {
-        return switch (allMutations) {
+    private MutationStrategy mutation(AllMutations allMutations){
+        return switch (allMutations){
             case RandomMutation -> new RandomMutation();
             case SlightAdjustmentMutation -> new SlightAdjustmentMutation();
         };
     }
 
-    private BehaviorStrategy behave(AllAnimalBehaviors allAnimalBehaviors) {
-        return switch (allAnimalBehaviors) {
+    private BehaviorStrategy behav(AllAnimalBehaviors allAnimalBehaviors){
+        return switch (allAnimalBehaviors){
             case FullPredestination -> new FullPredestination();
         };
     }
 
-    public Genome getGenome() {
-        return genome;
+    public Genome getGenom() {
+        return genom;
     }
 
     public void haveDoneChild() {
-        numberOfChildren++;
+        numberOfChilds++;
     }
 
     public void died(int day) {
@@ -71,11 +73,9 @@ public class Animal implements WorldElement {
     public void Birth(int day) {
         dayOfBirth = day;
     }
-
     public BehaviorStrategy getBehaviorStrategy() {
         return behaviorStrategy;
     }
-
     public MutationStrategy getMutationStrategy() {
         return mutationStrategy;
     }
@@ -100,29 +100,41 @@ public class Animal implements WorldElement {
         this.direction = direction;
     }
 
-    public void setNewDirection() {
-        direction = genome.getActiveGen();
-    }
+    public void setNewDirection(){direction = genom.getActiveGen();}
 
     public void changeEnergy(int e) {
         energy = energy + e;
     }
 
+    /**
+     * Calculates the next move position based on the current direction.
+     *
+     * @return the new position after the move.
+     */
     public Vector2D nextMove() {
         Vector2D unitVector = direction.toUnitVector();
         return position.add(unitVector);
     }
 
+    /**
+     * Mutates the genom of the animal.
+     *
+     * @param numberOfGenToMutate the number of genes to mutate.
+     */
     public void mutate(int numberOfGenToMutate) {
-        mutationStrategy.mutate(genome, numberOfGenToMutate);
+        mutationStrategy.mutate(genom, numberOfGenToMutate);
     }
+
+    /**
+     * Changes the direction of the animal based on its genom.
+     */
 
     public void rotateAndDecreaseEnergy() {
-        direction = direction.rotate(genome.getActiveGen());
-        energy--;
+        direction = direction.rotate(genom.getActiveGen());
+        energy --;
     }
 
-    public String toString() {
+    public String toString(){
         return "@";
     }
 
@@ -134,7 +146,11 @@ public class Animal implements WorldElement {
         return dayOfBirth;
     }
 
-    public int getNumberOfChildren() {
-        return numberOfChildren;
+    public int getNumberOfChilds() {
+        return numberOfChilds;
+    }
+
+    public int getNumberOfEatenGrass() {
+        return numberOfEatenGrass;
     }
 }

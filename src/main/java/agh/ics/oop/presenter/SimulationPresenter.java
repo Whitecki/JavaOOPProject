@@ -1,6 +1,8 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.app.AnimalStatistics;
 import agh.ics.oop.app.Statistics;
+import agh.ics.oop.app.StatsSaver;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.model.map.Map;
@@ -10,43 +12,62 @@ import agh.ics.oop.simulation.Simulation;
 import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.visualization.ConsoleMapDisplay;
 import agh.ics.oop.simulation.SimulationEngine;
-import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 
-public class SimulationPresenter implements MapChangeListener {
 
+public class SimulationPresenter implements MapChangeListener {
+    @FXML
+    private Button startButton;
     @FXML
     private GridPane mapGrid;
     @FXML
     private Label infoLabel;
     @FXML
-    public Label animalNumStats;
+    private Label animalNumStats;
     @FXML
-    public Label plantsNumStats;
+    private Label plantsNumStats;
     @FXML
-    public Label freeFieldsStats;
+    private Label freeFieldsStats;
     @FXML
-    public Label averageEnergyStats;
+    private Label averageEnergyStats;
     @FXML
-    public Label popularGenomeStats;
+    private Label averageLifeStats;
     @FXML
-    public Label averageLifeStats;
+    private Label averageChildrenNumStats;
     @FXML
-    public Label averageChildrenNumStats;
+    private GridPane animalStats;
     @FXML
-    public GridPane animalStats;
+    private Label followLabel;
+    @FXML
+    private Label followedanimalEnergy;
+    @FXML
+    private Label followedanimalEaten;
+    @FXML
+    private Label followedanimalChildren;
+    @FXML
+    private Label followedanimalDays;
+    @FXML
+    private Label followedAnimalDeath;
+    @FXML
+    private Label followedGenom;
+    @FXML
+    private Label followedanimalGen;
+    @FXML
+    private Button stopFollowingButton;
     private ConfigurationData configurationData;
+    private boolean followingAnimal = false;
+    private Animal animalFollowed;
     Map map;
     private int CELL_WIDTH = 400;
     private int CELL_HEIGHT = 400;
@@ -55,16 +76,77 @@ public class SimulationPresenter implements MapChangeListener {
     private int cellSize;
     private Simulation presenterSimulation;
     private Statistics statistics;
+    private AnimalStatistics animalStatistics;
+    private int day = 0;
+    private boolean saveStats;
 
-    public void setConfigurationData(ConfigurationData configurationData){
+    public void setConfigurationData(ConfigurationData configurationData, boolean saveStats){
         this.configurationData = configurationData;
         this.height = configurationData.mapHeight();
         this.width = configurationData.mapWidth();
+        this.saveStats = saveStats;
     }
+
     public void setWorldMap(Map map) {
         this.map = map;
     }
 
+    public void setFollowingStats(boolean val){
+        followingAnimal = val;
+        followLabel.setVisible(val);
+        animalStats.setVisible(val);
+        stopFollowingButton.setVisible(val);
+    }
+
+    @FXML
+    private void onSimulationStartClicked() throws InterruptedException {
+        startButton.setVisible(false);
+        infoLabel.setVisible(false);
+        Simulation simulation = new Simulation(configurationData);
+        presenterSimulation = simulation;
+        statistics = new Statistics(simulation);
+        MapChangeListener listener = new ConsoleMapDisplay();
+        Map simulationMap = simulation.getMap();
+        this.setWorldMap(simulationMap);
+        map.subscribe(listener);
+        map.subscribe(this);
+        if(saveStats) {
+            StatsSaver statsSaver = new StatsSaver(this);
+            map.subscribe(statsSaver);
+        }
+        List<Simulation> simulationList = List.of(simulation);
+        SimulationEngine engine = new SimulationEngine(simulationList);
+        new Thread(() -> {
+            engine.run();
+        }).start();
+    }
+
+    @FXML
+    private void onHighlightPlantsButton(ActionEvent actionEvent) {
+        for(Vector2D vector: this.statistics.mostPreferedByPlants()){
+            Vector2D gridVector = vectorOnGrid(vector);
+            mapGrid.add(new  Circle(this.cellSize/2, Color.web("#225641")), gridVector.getX(), gridVector.getY());
+        }
+    }
+
+    @FXML
+    private void onSimulationStop(){
+        presenterSimulation.stop();
+    }
+
+    @FXML
+    private void onSimulationResume(){
+        presenterSimulation.resume();
+    }
+
+    public void onStopFollowing() {
+        setFollowingStats(false);
+    }
+
+    @Override
+    public void mapChanged(Map worldMap, String message) {
+        drawMap();
+    }
     private int calculateCellSize(){
         int maxCellWidth = this.CELL_WIDTH / (width);
         int maxCellHeight = this.CELL_HEIGHT/ (height);
@@ -88,7 +170,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     public Circle getGrassColor(){
         Circle circle = new Circle(this.cellSize/2);
-        circle.setFill(Color.GREEN);
+        circle.setFill(Color.web("#76b474"));
         return circle;
     }
 
@@ -96,83 +178,15 @@ public class SimulationPresenter implements MapChangeListener {
         Circle circle = new Circle(this.cellSize/2);
         int animalEnergy = animal.getEnergy();
         if(animalEnergy <= 0.2*configurationData.initialAnimalEnergy()){
-            circle.setFill(Color.VIOLET.darker().darker().darker());
+            circle.setFill(Color.web("#4d2642"));
         } else if (animalEnergy <= 0.5*configurationData.initialAnimalEnergy()) {
-            circle.setFill(Color.VIOLET.darker().darker());
+            circle.setFill(Color.web("#800080"));
         } else if (animalEnergy <= 0.8*configurationData.initialAnimalEnergy()) {
-            circle.setFill(Color.VIOLET.darker());
+            circle.setFill(Color.web("#b373b8"));
         }else {
-            circle.setFill(Color.VIOLET);
+            circle.setFill(Color.web("#f683c5"));
         }
         return circle;
-    }
-    public void drawMap2() {
-
-        this.clearGrid();
-        mapGrid.minHeight(height);
-        mapGrid.minWidth(width);
-        this.cellSize = this.calculateCellSize();
-
-        drawFrame(map.getLowerLeftBands(), map.getUpperRightBands());
-        HashMap<Vector2D, List<Animal>> animalHashMap = map.getAnimalHashMap();
-        HashMap<Vector2D, Grass> grassHashMap = map.getGrassHashMap();
-
-        for (Vector2D vector : grassHashMap.keySet()) {
-            Vector2D gridVector = vectorOnGrid(vector);
-            mapGrid.add(getGrassColor(), gridVector.getX(), gridVector.getY());
-        }
-        for (Vector2D vector : animalHashMap.keySet()) {
-            Vector2D gridVector = vectorOnGrid(vector);
-            mapGrid.add(getAnimalColor(animalHashMap.get(vector).get(0)), gridVector.getX(), gridVector.getY());
-        }
-        drawStat();
-    }
-
-    void drawMap() {
-        clearGrid();
-        draw(map.getLowerLeftBands(), map.getUpperRightBands());
-    };
-
-    @Override
-    public void mapChanged(Map worldMap, String message) {
-        drawMap2();
-    }
-
-    @FXML
-    private void onSimulationStartClicked() throws InterruptedException {
-        infoLabel.setVisible(false);
-        Simulation simulation = new Simulation(configurationData);
-        presenterSimulation = simulation;
-        statistics = new Statistics(simulation);
-        MapChangeListener listener = new ConsoleMapDisplay();
-        Map simulationMap = simulation.getMap();
-        this.setWorldMap(simulationMap);
-        map.subscribe(listener);
-        map.subscribe(this);
-        List<Simulation> simulationList = List.of(simulation);
-        SimulationEngine engine = new SimulationEngine(simulationList);
-        new Thread(() -> {
-            engine.run();
-        }).start();
-    }
-
-    private void draw(Vector2D lowerLeft, Vector2D upperRight) {
-        drawFrame(lowerLeft, upperRight);
-        int y0 = lowerLeft.getY();
-        int x0 = lowerLeft.getX();
-        int y1 = upperRight.getY();
-        int x1 = upperRight.getX();
-        for(int i = x0; i < x1 + 1; i++){
-            for(int j = y0; j < y1 + 1; j++){
-                Object object = this.map.objectAt(new Vector2D(i, j));
-                if (object != null) {
-
-                    String mapObject = object.toString();
-                    Label a = new Label(mapObject);
-                    mapGrid.add(a, i - x0 + 1, y1 - j + 1);
-                }
-            }
-        }
     }
 
     private void drawFrame(Vector2D lowerLeft, Vector2D upperRight) {
@@ -201,27 +215,65 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void drawStat(){
 
-        this.animalNumStats.setText(String.valueOf(statistics.allAnimalsCount()));
-        this.averageEnergyStats.setText(String.valueOf(statistics.averageEnergyCount()));
-        this.averageLifeStats.setText(String.valueOf(statistics.averageLifeLength()));
-        this.plantsNumStats.setText(String.valueOf(statistics.allGrassCount()));
-        this.freeFieldsStats.setText(String.valueOf(statistics.freeFieldCount()));
+        animalNumStats.setText(String.valueOf(statistics.allAnimalsCount()));
+        averageEnergyStats.setText(String.valueOf(statistics.averageEnergyCount()));
+        averageLifeStats.setText(String.valueOf(statistics.averageLifeLength()));
+        plantsNumStats.setText(String.valueOf(statistics.allGrassCount()));
+        freeFieldsStats.setText(String.valueOf(statistics.freeFieldCount()));
 //        this.popularGenomeStats.setText();
-        this.averageChildrenNumStats.setText(String.valueOf(statistics.averageKidsCount()));
-//        if(followingAnimal){
-//            displayAnimalStats();
-//        }
-    }
-    @FXML
-    private void onSimulationStop(){
-        presenterSimulation.stop();
+        averageChildrenNumStats.setText(String.valueOf(statistics.averageKidsCount()));
+        if(followingAnimal){
+            displayAnimalStats();
+        }
     }
 
-    @FXML
-    private void onSimulationResume(){
-        presenterSimulation.resume();
+    public void drawMap() {
+        day++;
+        this.clearGrid();
+        mapGrid.minHeight(height);
+        mapGrid.minWidth(width);
+        this.cellSize = this.calculateCellSize();
 
+        drawFrame(map.getLowerLeftBands(), map.getUpperRightBands());
+        HashMap<Vector2D, List<Animal>> animalHashMap = map.getAnimalHashMap();
+        HashMap<Vector2D, Grass> grassHashMap = map.getGrassHashMap();
+
+        for (Vector2D vector : grassHashMap.keySet()) {
+            Vector2D gridVector = vectorOnGrid(vector);
+            mapGrid.add(getGrassColor(), gridVector.getX(), gridVector.getY());
+        }
+        for (Vector2D vector : animalHashMap.keySet()) {
+            Vector2D gridVector = vectorOnGrid(vector);
+            mapGrid.add(getAnimalColor(animalHashMap.get(vector).get(0)), gridVector.getX(), gridVector.getY());
+            Rectangle invisibleRect = new Rectangle(this.cellSize, this.cellSize, Color.TRANSPARENT);
+            mapGrid.add(invisibleRect, gridVector.getX(), gridVector.getY());
+            invisibleRect.setOnMouseClicked(event -> startToDisplayAnimalInfo(animalHashMap.get(vector).get(0)));
+        }
+        drawStat();
     }
 
+    public void startToDisplayAnimalInfo(Animal animal){
+        followingAnimal = true;
+        animalFollowed = animal;
+        animalStatistics = new AnimalStatistics(animal);
+        setFollowingStats(true);
+        drawStat();
+    }
+
+    public void displayAnimalStats(){
+        Vector2D gridVector = vectorOnGrid(this.animalFollowed.getPosition());
+        mapGrid.add(new  Circle(this.cellSize/2, Color.web("#6cb8b9")), gridVector.getX(), gridVector.getY());
+        this.followedanimalEnergy.setText(this.animalStatistics.getEnergyLevel());
+        this.followedanimalEaten.setText(this.animalStatistics.getPlantsEaten());
+        this.followedanimalChildren.setText(this.animalStatistics.getKidsNumber());
+        this.followedanimalDays.setText(this.animalStatistics.getAge(day));
+        this.followedAnimalDeath.setText(this.animalStatistics.getDeathDate());
+        this.followedGenom.setText(this.animalStatistics.getGenom());
+        this.followedanimalGen.setText(this.animalStatistics.getActiveGenomPart());
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
 }
 

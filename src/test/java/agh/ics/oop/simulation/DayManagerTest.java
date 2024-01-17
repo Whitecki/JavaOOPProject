@@ -224,9 +224,9 @@ void removeDeathAnimals_ShouldRemoveAnimalsWithZeroEnergy() {
         dayManager.rotateAndMoveAnimals();
         dayManager.keepCalmAndReproduce();
 
-        int actualAnimalChildrenCount = animal.getNumberOfChildren();
+        int actualAnimalChildrenCount = animal.getNumberOfChilds();
         assertEquals(1, actualAnimalChildrenCount);
-        int actualAnimal1ChildrenCount = animal1.getNumberOfChildren();
+        int actualAnimal1ChildrenCount = animal1.getNumberOfChilds();
         assertEquals(1, actualAnimal1ChildrenCount);
     }
     //    Sprawdź, czy rozmnażanie nie odbywa się, gdy są niewystarczające warunki (np. brak energii).

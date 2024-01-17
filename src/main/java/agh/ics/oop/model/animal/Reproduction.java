@@ -36,11 +36,11 @@ public class Reproduction {
     private Genome createNewGenome() {
         int mommyEnergy = mommy.getEnergy();
         int daddyEnergy = daddy.getEnergy();
-        double mommyInheritedGensNumber = (double) mommyEnergy / (daddyEnergy + mommyEnergy) * mommy.getGenome().length();
-        double daddyInheritedGensNumber = (double) daddyEnergy / (daddyEnergy + mommyEnergy) * mommy.getGenome().length();
+        double mommyInheritedGensNumber = (double) mommyEnergy / (daddyEnergy + mommyEnergy) * mommy.getGenom().length();
+        double daddyInheritedGensNumber = (double) daddyEnergy / (daddyEnergy + mommyEnergy) * mommy.getGenom().length();
 
-        ArrayList<MoveDirection> childGenome = new ArrayList<>(mommy.getGenome().length());
-        childGenome.addAll(mommy.getGenome().getGenome());
+        ArrayList<MoveDirection> childGenome = new ArrayList<>(mommy.getGenom().length());
+        childGenome.addAll(mommy.getGenom().getGenome());
 
         if (random.nextInt(2) == 1) {
             MommyFirst(mommyInheritedGensNumber, daddyInheritedGensNumber, childGenome, mommy, daddy);
@@ -50,25 +50,25 @@ public class Reproduction {
 
         if (mommyInheritedGensNumber > Math.floor(mommyInheritedGensNumber)) {
             if (random.nextInt(2) == 1) {
-                childGenome.set((int) Math.floor(mommyInheritedGensNumber), mommy.getGenome().getGenome().get((int) Math.floor(mommyInheritedGensNumber)));
+                childGenome.set((int) Math.floor(mommyInheritedGensNumber), mommy.getGenom().getGenome().get((int) Math.floor(mommyInheritedGensNumber)));
             } else {
-                childGenome.set((int) Math.floor(mommyInheritedGensNumber), daddy.getGenome().getGenome().get((int) Math.floor(mommyInheritedGensNumber)));
+                childGenome.set((int) Math.floor(mommyInheritedGensNumber), daddy.getGenom().getGenome().get((int) Math.floor(mommyInheritedGensNumber)));
             }
         }
-        return new Genome(childGenome, random.nextInt(0, mommy.getGenome().length()));
+        return new Genome(childGenome, random.nextInt(0, mommy.getGenom().length()));
     }
 
     private void MommyFirst(double mommyInheritedGensNumber, double daddyInheritedGensNumber, ArrayList<MoveDirection> childGenome, Animal mommy, Animal daddy) {
         for (int i = 0; i < Math.floor(mommyInheritedGensNumber); i++) {
-            childGenome.set(i, mommy.getGenome().getGenome().get(i));
+            childGenome.set(i, mommy.getGenom().getGenome().get(i));
         }
         for (int i = (int) Math.ceil(mommyInheritedGensNumber); i < daddyInheritedGensNumber; i++) {
-            childGenome.set(i, daddy.getGenome().getGenome().get(i));
+            childGenome.set(i, daddy.getGenom().getGenome().get(i));
         }
     }
     private void childMutations() {
-        int numberOfMutations = getRandomNumberInRange(minMutationCount, Math.min(maxMutationCount,mommy.getGenome().length()));
-        Set<Integer> mutationIndexes = generateUniqueRandomNumbers(0, mommy.getGenome().length(), numberOfMutations);
+        int numberOfMutations = getRandomNumberInRange(minMutationCount, Math.min(maxMutationCount,mommy.getGenom().length()));
+        Set<Integer> mutationIndexes = generateUniqueRandomNumbers(0, mommy.getGenom().length(), numberOfMutations);
         mutationIndexes.forEach(child::mutate);
     }
     private int getRandomNumberInRange(int min, int max) {

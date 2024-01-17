@@ -1,8 +1,13 @@
 package agh.ics.oop.app;
 
 import agh.ics.oop.model.animal.Animal;
+import agh.ics.oop.model.animal.Vector2D;
+import agh.ics.oop.model.growth.GrowthStrategy;
+import agh.ics.oop.model.growth.NearToGrassGrowth;
+import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.simulation.Simulation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Statistics {
@@ -40,6 +45,9 @@ public class Statistics {
                 numOfAnimals++;
             }
         }
+        if(numOfAnimals == 0){
+            return 0;
+        }
         return (int) sum/numOfAnimals;
     }
 
@@ -60,9 +68,40 @@ public class Statistics {
         int numOfAnimals = allAnimalsCount();
         for(List<Animal> animalList : simulation.getMap().getAnimalHashMap().values()){
             for(Animal animal : animalList){
-                sum += animal.getNumberOfChildren();
+                sum += animal.getNumberOfChilds();
             }
         }
+        if(numOfAnimals == 0){
+            return 0;
+        }
         return (int) sum/numOfAnimals;
+    }
+
+    public List<Vector2D> mostPreferedByPlants(){
+        ArrayList<Vector2D> preferedFields = new ArrayList<>();
+        GrowthStrategy growthStrategy = simulation.getMap().getGrowthStrategy();
+
+        if(growthStrategy instanceof NearToGrassGrowth){
+
+            for(Vector2D vector2D : simulation.getMap().getGrassHashMap().keySet()){
+                for (int i = vector2D.getX() - 1; i <= vector2D.getX() + 1; i++) {
+                    for (int j = vector2D.getY() - 1; j <= vector2D.getY() + 1; j++) {
+                       if(i >= 0 && i <= simulation.getMap().getMaxX() && j >= 0 && j <= simulation.getMap().getMaxY() && (i != vector2D.getX() || j != vector2D.getY())){
+                           preferedFields.add(new Vector2D(i, j));
+                       }
+                    }
+                }
+            }
+        }else{
+            int equatorTop = (simulation.getMap().getMaxY() - simulation.getMap().getMinY()) * 6/10;
+            int equatorBottom = (simulation.getMap().getMaxY() - simulation.getMap().getMinY()) * 4/10;
+
+            for(int i = 0; i <= simulation.getMap().getMaxX(); i++){
+                for(int j = equatorBottom; j <= equatorTop; j++){
+                    preferedFields.add(new Vector2D(i,j));
+                }
+            }
+        }
+        return preferedFields;
     }
 }

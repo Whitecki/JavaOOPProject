@@ -1,5 +1,6 @@
 package agh.ics.oop.model.animal;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public enum MoveDirection {
