@@ -36,6 +36,12 @@ public class DayManager {
             animalList.stream()
                     .filter(animal -> animal.getEnergy() == 0)
                     .forEach(animal -> animal.died(day));
+
+            for(Animal animal : animalList){
+                if(animal.getEnergy() == 0){
+                    map.addToDeadAnimals(animal);
+                }
+            }
             animalList.removeIf(animal -> animal.getEnergy() == 0);
         }
     }

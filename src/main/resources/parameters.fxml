@@ -101,7 +101,7 @@
 
             <Label text="Długość genomu" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
             <Spinner fx:id="genomLengthSpinner" GridPane.columnIndex="1" GridPane.rowIndex="12"
-                     min="3" max="50" initialValue="6" editable="true"/>
+                     min="3" max="20" initialValue="6" editable="true"/>
 
             <Label text="Minimalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
             <Spinner fx:id="minMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="14"
@@ -109,7 +109,7 @@
 
             <Label text="Maksymalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
             <Spinner fx:id="maxMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="16"
-                     min="0" max="20" initialValue="3" editable="true"/>
+                     min="1" max="20" initialValue="4" editable="true"/>
 
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="17" spacing="10">
                 <Label text="Zapisanie statystyk w pliku csv"/>

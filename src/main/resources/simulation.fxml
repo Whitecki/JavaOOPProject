@@ -4,15 +4,74 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import java.awt.Color?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+    <left>
+        <VBox spacing="10" >
+            <Label text="LEGENDA"/>
+            <HBox>
+                <Label text="Roślinki "/>
+                <Circle radius="10" fill="green" />
+            </HBox>
+            <Label text="Energia zwierzaków" />
+            <HBox fx:id="animalColors" />
+            <Label text="STATYSTYKI"/>
+            <GridPane vgap="10" layoutX="10" hgap="10">
+                <Label text="Liczba zwierząt" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="animalNumStats" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Liczba roślin" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="plantsNumStats" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Wolne pola" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="freeFieldsStats" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Średnia energia zwierząt" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Label fx:id="averageEnergyStats" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label text="Średnia długość życia" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Label fx:id="averageLifeStats" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label text="Średnia ilość dzieci" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <Label fx:id="averageChildrenNumStats" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                <Label text="Najpopularniejszy genom" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <Label fx:id="popularGenomeStats" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+<!--                <HBox GridPane.rowIndex="8" GridPane.columnIndex="0">-->
+<!--                    <Button text="Zwierzaki z najpopularniejszym genomem" onAction="#highlightAnimals" />-->
+<!--                </HBox>-->
+<!--                <HBox GridPane.rowIndex="9" GridPane.columnIndex="0">-->
+<!--                    <Button text="Pola preferowane przez rośliny" onAction="#highlightPlantsPreferences" />-->
+<!--                </HBox>-->
+            </GridPane>
+<!--            <Label text="ŚLEDZONY ZWIERZAK" fx:id="followeLabel"/>-->
+<!--            <GridPane fx:id="animalStats" vgap="10" layoutX="10" hgap="10">-->
+<!--                <Label text="Energia" GridPane.rowIndex="0" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalEnergy" GridPane.rowIndex="0" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Zjedzone rośliny" GridPane.rowIndex="1" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalEaten" GridPane.rowIndex="1" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Dzieci" GridPane.rowIndex="2" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalChildren" GridPane.rowIndex="2" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Potomkowie" GridPane.rowIndex="3" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalOffspring" GridPane.rowIndex="3" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Przeżyte dni" GridPane.rowIndex="4" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalDays" GridPane.rowIndex="4" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Dzień śmierci" GridPane.rowIndex="5" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedAnimalDeath" GridPane.rowIndex="5" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Genom" GridPane.rowIndex="6" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedGenom" GridPane.rowIndex="6" GridPane.columnIndex="1"/>-->
+<!--                <Label text="Aktywny gen" GridPane.rowIndex="7" GridPane.columnIndex="0"/>-->
+<!--                <Label fx:id="followedanimalGen" GridPane.rowIndex="7" GridPane.columnIndex="1"/>-->
+<!--            </GridPane>-->
+            <HBox>
+                <Button fx:id="resumeButton" text="RESUME" onAction="#onSimulationResume"/>
+                <Button fx:id="stopButton" text="STOP" onAction="#onSimulationStop"/>
+            </HBox>
+        </VBox>
+    </left>
     <center>
         <VBox alignment="CENTER">
             <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
             <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER"/>
-            <Label fx:id="mapLabel" textAlignment="CENTER"/>
             <Button fx:id="startButton" text="START" alignment="CENTER" onAction="#onSimulationStartClicked"> </Button>
         </VBox>
     </center>

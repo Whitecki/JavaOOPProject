@@ -1,17 +1,11 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.SimulationApp;
+import agh.ics.oop.app.SimulationApp;
 import agh.ics.oop.model.behavior.AllAnimalBehaviors;
 import agh.ics.oop.model.edge.AllEdges;
 import agh.ics.oop.model.growth.GrowthTypes;
-import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.mutation.AllMutations;
-import agh.ics.oop.model.visualization.ConsoleMapDisplay;
-import agh.ics.oop.model.visualization.MapChangeListener;
 import agh.ics.oop.simulation.ConfigurationData;
-import agh.ics.oop.simulation.Simulation;
-import agh.ics.oop.simulation.SimulationEngine;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
@@ -21,9 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-
-import static com.sun.javafx.application.ParametersImpl.getParameters;
 
 
 public class ParametersPresenter {
@@ -108,8 +99,6 @@ public class ParametersPresenter {
         presenter.setConfigurationData(configurationData);
         simulationApp.configureStage(secondStage, viewRoot); // Wykorzystaj metodę configureStage z SimulationApp
         secondStage.show();
-
-
     }
 }
 

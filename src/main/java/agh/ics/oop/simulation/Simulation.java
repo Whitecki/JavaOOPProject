@@ -17,6 +17,7 @@ public class Simulation implements Runnable{
     private final ConfigurationData cD;
     private final Map map;
     private final Random random = new Random();
+    private boolean paused = true;
 
     public Simulation(ConfigurationData configurationData) {
         this.cD = configurationData;
@@ -53,10 +54,14 @@ public class Simulation implements Runnable{
             map.addAnimal(vector2D,new Animal(vector2D, cD.initialAnimalEnergy(),randomDirection, generateRandomGenome(), cD.allMutations(), cD.allAnimalBehaviors()));
         }
     }
-    public void startSimulation() {
-
-        for (int i = 0; i < 10; i++) {
+    public void startSimulation() throws InterruptedException {
+        paused = false;
+        int i = 0;
+        while(!map.allAnimalsAreDead()) {
             int j = i;
+            while(paused){
+                Thread.sleep(1000);
+            }
             Platform.runLater(() -> {
                 DayManager dayManager = new DayManager(map, cD, j);
                 dayManager.run();
@@ -66,6 +71,8 @@ public class Simulation implements Runnable{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            i++;
+
         }
     }
     public Genome generateRandomGenome(){
@@ -81,7 +88,17 @@ public class Simulation implements Runnable{
 
     @Override
     public void run() {
-        startSimulation();
+        try {
+            startSimulation();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void stop(){
+        paused = true;
+    }
+    public void resume(){
+        paused = false;
     }
 
     public Map getMap() {

@@ -1,5 +1,6 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.app.Statistics;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.model.map.Map;
@@ -11,6 +12,7 @@ import agh.ics.oop.model.visualization.ConsoleMapDisplay;
 import agh.ics.oop.simulation.SimulationEngine;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -18,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +27,25 @@ import java.util.List;
 public class SimulationPresenter implements MapChangeListener {
 
     @FXML
-    private Label bounds;
-    @FXML
     private GridPane mapGrid;
     @FXML
     private Label infoLabel;
+    @FXML
+    public Label animalNumStats;
+    @FXML
+    public Label plantsNumStats;
+    @FXML
+    public Label freeFieldsStats;
+    @FXML
+    public Label averageEnergyStats;
+    @FXML
+    public Label popularGenomeStats;
+    @FXML
+    public Label averageLifeStats;
+    @FXML
+    public Label averageChildrenNumStats;
+    @FXML
+    public GridPane animalStats;
     private ConfigurationData configurationData;
     Map map;
     private int CELL_WIDTH = 400;
@@ -38,6 +53,8 @@ public class SimulationPresenter implements MapChangeListener {
     private int height;
     private int width;
     private int cellSize;
+    private Simulation presenterSimulation;
+    private Statistics statistics;
 
     public void setConfigurationData(ConfigurationData configurationData){
         this.configurationData = configurationData;
@@ -79,19 +96,19 @@ public class SimulationPresenter implements MapChangeListener {
         Circle circle = new Circle(this.cellSize/2);
         int animalEnergy = animal.getEnergy();
         if(animalEnergy <= 0.2*configurationData.initialAnimalEnergy()){
-            circle.setFill(Color.VIOLET.darker());
+            circle.setFill(Color.VIOLET.darker().darker().darker());
         } else if (animalEnergy <= 0.5*configurationData.initialAnimalEnergy()) {
-            circle.setFill(Color.VIOLET);
+            circle.setFill(Color.VIOLET.darker().darker());
         } else if (animalEnergy <= 0.8*configurationData.initialAnimalEnergy()) {
-            circle.setFill(Color.PINK.darker());
+            circle.setFill(Color.VIOLET.darker());
         }else {
-            circle.setFill(Color.PINK);
+            circle.setFill(Color.VIOLET);
         }
         return circle;
     }
     public void drawMap2() {
-        this.clearGrid();
 
+        this.clearGrid();
         mapGrid.minHeight(height);
         mapGrid.minWidth(width);
         this.cellSize = this.calculateCellSize();
@@ -108,10 +125,8 @@ public class SimulationPresenter implements MapChangeListener {
             Vector2D gridVector = vectorOnGrid(vector);
             mapGrid.add(getAnimalColor(animalHashMap.get(vector).get(0)), gridVector.getX(), gridVector.getY());
         }
+        drawStat();
     }
-
-
-
 
     void drawMap() {
         clearGrid();
@@ -127,6 +142,8 @@ public class SimulationPresenter implements MapChangeListener {
     private void onSimulationStartClicked() throws InterruptedException {
         infoLabel.setVisible(false);
         Simulation simulation = new Simulation(configurationData);
+        presenterSimulation = simulation;
+        statistics = new Statistics(simulation);
         MapChangeListener listener = new ConsoleMapDisplay();
         Map simulationMap = simulation.getMap();
         this.setWorldMap(simulationMap);
@@ -136,9 +153,6 @@ public class SimulationPresenter implements MapChangeListener {
         SimulationEngine engine = new SimulationEngine(simulationList);
         new Thread(() -> {
             engine.run();
-            Platform.runLater(() -> {
-                drawMap2();
-            });
         }).start();
     }
 
@@ -183,6 +197,30 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.add(new Label(String.valueOf(y1)),0, i);
             y1--;
         }
+    }
+
+    public void drawStat(){
+
+        this.animalNumStats.setText(String.valueOf(statistics.allAnimalsCount()));
+        this.averageEnergyStats.setText(String.valueOf(statistics.averageEnergyCount()));
+        this.averageLifeStats.setText(String.valueOf(statistics.averageLifeLength()));
+        this.plantsNumStats.setText(String.valueOf(statistics.allGrassCount()));
+        this.freeFieldsStats.setText(String.valueOf(statistics.freeFieldCount()));
+//        this.popularGenomeStats.setText();
+        this.averageChildrenNumStats.setText(String.valueOf(statistics.averageKidsCount()));
+//        if(followingAnimal){
+//            displayAnimalStats();
+//        }
+    }
+    @FXML
+    private void onSimulationStop(){
+        presenterSimulation.stop();
+    }
+
+    @FXML
+    private void onSimulationResume(){
+        presenterSimulation.resume();
+
     }
 
 }

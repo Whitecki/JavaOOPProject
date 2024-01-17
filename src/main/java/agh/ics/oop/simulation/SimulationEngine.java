@@ -13,7 +13,7 @@ public class SimulationEngine implements Runnable{
         this.simulations = simulations;
     }
 
-    public void runSync(){
+    public void runSync() throws InterruptedException {
         for (Simulation simulation : simulations){
             simulation.startSimulation();
         }

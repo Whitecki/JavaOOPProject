@@ -29,6 +29,7 @@ public class Map {
     private final Vector2D upperRightBands;
     private final List<MapChangeListener> listeners = new ArrayList<>();
     private MapVisualizer drawmap = new MapVisualizer(this);
+    private List<Animal> deadAnimals = new ArrayList<>();
 
     public Map(GrowthTypes growthTypes, AllEdges allEdges, int minX, int minY, int maxX, int maxY) {
         this.minX = minX;
@@ -128,7 +129,7 @@ public class Map {
 
     public WorldElement objectAt(Vector2D position){
         if(animalHashMap.get(position) != null){
-            return animalHashMap.get(position).get(0); ////chuj
+            return animalHashMap.get(position).get(0);
         }
         else{
             return grassHashMap.get(position);
@@ -141,6 +142,17 @@ public class Map {
         for (MapChangeListener observer : listeners) {
             observer.mapChanged(this, message);
         }
+    }
+    public List<Animal> getDeadAnimals() {
+        return deadAnimals;
+    }
+
+    public boolean allAnimalsAreDead(){
+        return animalHashMap.isEmpty();
+    }
+
+    public void addToDeadAnimals(Animal animal){
+        deadAnimals.add(animal);
     }
 
     public String toString() {

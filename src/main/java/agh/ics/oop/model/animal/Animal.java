@@ -138,4 +138,15 @@ public class Animal implements WorldElement{
         return "@";
     }
 
+    public int getDayOfDeath() {
+        return dayOfDeath;
+    }
+
+    public int getDayOfBirth() {
+        return dayOfBirth;
+    }
+
+    public int getNumberOfChilds() {
+        return numberOfChilds;
+    }
 }
