@@ -1,0 +1,16 @@
+BorderPane{
+    -fx-font-family: "Arial", sans-serif;
+}
+
+Button{
+    -fx-font-size: 14px;
+    -fx-background-color: #6cb8b9;
+    -fx-text-fill: white;
+    -fx-background-radius: 9;
+    -fx-font-weight: bold;
+}
+
+Label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
