@@ -1,7 +1,6 @@
 package agh.ics.oop.model.animal;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Genome {
     private final ArrayList<MoveDirection> genome;
@@ -27,7 +26,7 @@ public class Genome {
 
     public void setActiveGenomeIndex(int activeGenomeIndex) {
         if (activeGenomeIndex < 0 || activeGenomeIndex >= genome.size()) {
-            throw new IllegalArgumentException("Index poza zakresem genomu");
+            throw new IllegalArgumentException("Index out of genome boundary");
         }
         this.activeGenomeIndex = activeGenomeIndex;
     }

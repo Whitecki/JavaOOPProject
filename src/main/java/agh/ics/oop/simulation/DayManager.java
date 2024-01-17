@@ -44,6 +44,7 @@ public class DayManager {
             }
             animalList.removeIf(animal -> animal.getEnergy() == 0);
         }
+        System.out.println("umarły");
     }
 
     public void rotateAndMoveAnimals() {
@@ -70,6 +71,7 @@ public class DayManager {
             map.addAnimal(animal.getPosition(), animal);
             priorityBreedingFeedingMap.add(animal.getPosition(), animal);
         }
+        System.out.println("ruszyły się");
     }
 
 
@@ -83,11 +85,12 @@ public class DayManager {
                 Animal animal = priorityBreedingFeedingMap.getTheBest(vector2D);
                 if (animal != null) {
                     animal.haveEaten();
-                    animal.changeEnergy(animal.getEnergy() + configurationData.energyFromPlant());
+                    animal.changeEnergy(configurationData.energyFromPlant());
                     map.removeGrass(vector2D);
             }
             }
         }
+        System.out.println("zjadły");
     }
 
 
@@ -103,9 +106,11 @@ public class DayManager {
                 }
             }
         }
+        System.out.println("ruchasz sie czy trzeba z tb chodzic");
     }
 
     public void newPlantsGrowth() {
         map.getGrowthStrategy().growPlants(map,configurationData.dailyPlantGrowth());
+        System.out.println("trawka urosła");
     }
 }

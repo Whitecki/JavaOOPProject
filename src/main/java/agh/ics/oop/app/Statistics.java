@@ -1,7 +1,6 @@
 package agh.ics.oop.app;
 
 import agh.ics.oop.model.animal.Animal;
-import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.simulation.Simulation;
 
 import java.util.List;
@@ -61,7 +60,7 @@ public class Statistics {
         int numOfAnimals = allAnimalsCount();
         for(List<Animal> animalList : simulation.getMap().getAnimalHashMap().values()){
             for(Animal animal : animalList){
-                sum += animal.getNumberOfChilds();
+                sum += animal.getNumberOfChildren();
             }
         }
         return (int) sum/numOfAnimals;

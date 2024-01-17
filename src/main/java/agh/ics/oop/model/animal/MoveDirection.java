@@ -13,7 +13,7 @@ public enum MoveDirection {
     NORTH_WEST("7");
     private final String name;
 
-    private MoveDirection(String name) {
+    MoveDirection(String name) {
         this.name = name;
     }
 
@@ -32,6 +32,10 @@ public enum MoveDirection {
 
     public MoveDirection rotate(MoveDirection other){
         int value = (Integer.parseInt(name)+Integer.parseInt(other.name))%8;
+        return getMoveDirection(value);
+    }
+
+    private MoveDirection getMoveDirection(int value) {
         return switch (value){
             case 0 -> NORTH;
             case 1 -> NORTH_EAST;
@@ -44,61 +48,37 @@ public enum MoveDirection {
             default -> throw new IllegalStateException("Unexpected value: " + value);
         };
     }
+
     public MoveDirection randomOtherThanThis(){
-        String a = MoveDirection.NORTH.name;
         Random random = new Random();
         int value1 = Integer.parseInt(name);
         int value2 = random.nextInt(1,8);
         int value = (value1+value2)%8;
-        return switch (value){
-            case 0 -> NORTH;
-            case 1 -> NORTH_EAST;
-            case 2 -> EAST;
-            case 3 -> SOUTH_EAST;
-            case 4 -> SOUTH;
-            case 5 -> SOUTH_WEST;
-            case 6 -> WEST;
-            case 7 -> NORTH_WEST;
-            default -> throw new IllegalStateException("Unexpected value: " + value);
-    };
+        return getMoveDirection(value);
     }
 
     public MoveDirection opposite() {
+        return getMoveDirection(SOUTH, SOUTH_WEST, SOUTH, NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST);
+    }
+
+    private MoveDirection getMoveDirection(MoveDirection moveDirection, MoveDirection moveDirection2, MoveDirection moveDirection3, MoveDirection moveDirection4, MoveDirection moveDirection5, MoveDirection moveDirection6, MoveDirection moveDirection7, MoveDirection moveDirection8) {
         return switch (this) {
-            case NORTH -> SOUTH;
-            case NORTH_EAST -> SOUTH_WEST;
-            case EAST -> SOUTH;
-            case SOUTH_EAST -> NORTH_WEST;
-            case SOUTH -> NORTH;
-            case SOUTH_WEST -> NORTH_EAST;
-            case WEST -> EAST;
-            case NORTH_WEST -> SOUTH_EAST;
+            case NORTH -> moveDirection;
+            case NORTH_EAST -> moveDirection2;
+            case EAST -> moveDirection3;
+            case SOUTH_EAST -> moveDirection4;
+            case SOUTH -> moveDirection5;
+            case SOUTH_WEST -> moveDirection6;
+            case WEST -> moveDirection7;
+            case NORTH_WEST -> moveDirection8;
         };
     }
 
     public MoveDirection next() {
-        return switch (this) {
-            case NORTH -> NORTH_EAST;
-            case NORTH_EAST -> EAST;
-            case EAST -> SOUTH_EAST;
-            case SOUTH_EAST -> SOUTH;
-            case SOUTH -> SOUTH_WEST;
-            case SOUTH_WEST -> WEST;
-            case WEST -> NORTH_WEST;
-            case NORTH_WEST -> NORTH;
-        };
+        return getMoveDirection(NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST, NORTH);
     }
 
     public MoveDirection previous() {
-        return switch (this) {
-            case NORTH -> NORTH_WEST;
-            case NORTH_EAST -> NORTH;
-            case EAST -> NORTH_EAST;
-            case SOUTH_EAST -> EAST;
-            case SOUTH -> SOUTH_EAST;
-            case SOUTH_WEST -> SOUTH;
-            case WEST -> SOUTH_WEST;
-            case NORTH_WEST -> WEST;
-        };
+        return getMoveDirection(NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST);
     }
 }

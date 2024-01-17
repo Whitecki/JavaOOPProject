@@ -7,7 +7,6 @@ import agh.ics.oop.model.animal.Vector2D;
 import agh.ics.oop.model.behavior.AllAnimalBehaviors;
 import agh.ics.oop.model.edge.AllEdges;
 import agh.ics.oop.model.growth.GrowthTypes;
-import agh.ics.oop.model.map.Grass;
 import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.map.PriorityBreedingFeedingMap;
 import agh.ics.oop.model.mutation.AllMutations;
@@ -125,6 +124,10 @@ void removeDeathAnimals_ShouldRemoveAnimalsWithZeroEnergy() {
         map.addAnimal(animal1.getPosition(),animal1);
         map.addGrass(new Vector2D(2,3));
         dayManager.rotateAndMoveAnimals();
+        int energyAnimal = animal.getEnergy();
+        int energyAnimal1 = animal1.getEnergy();
+        Vector2D animalPosition = animal.getPosition();
+        Vector2D animal1Position = animal1.getPosition();
 
         dayManager.keepCalmAndEatGrass();
 
@@ -204,6 +207,27 @@ void removeDeathAnimals_ShouldRemoveAnimalsWithZeroEnergy() {
         assertEquals(30,actualCount3);
         int actualCount2 = animal1.getEnergy();
         assertEquals(28,actualCount2);
+    }
+
+    @Test
+    void testKeepCalmAndReproduce_CorrectAnimalChildCounter() {
+        configurationData = new ConfigurationData(10,10, AllEdges.GlobeEdgeBehavior,10,10,1,EquatorialGrowth,2,2,3,1,1,2, AllMutations.RandomMutation,2, AllAnimalBehaviors.FullPredestination);
+        map = new Map(GrowthTypes.NearToGrassGrowth, AllEdges.GlobeEdgeBehavior,0,0,configurationData.mapWidth(),configurationData.mapHeight());
+        dayManager = new DayManager(map, configurationData,1);
+        Animal animal = new Animal(new Vector2D(1,2),32, MoveDirection.NORTH_EAST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal1 = new Animal(new Vector2D(3,2),30, MoveDirection.NORTH_WEST,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        Animal animal2 = new Animal(new Vector2D(2,2),27, MoveDirection.NORTH,new Genome(new ArrayList<>(Arrays.asList(MoveDirection.NORTH,MoveDirection.NORTH)),0),configurationData.allMutations(),configurationData.allAnimalBehaviors());
+        map.addAnimal(animal.getPosition(),animal);
+        map.addAnimal(animal1.getPosition(),animal1);
+        map.addAnimal(animal2.getPosition(),animal2);
+
+        dayManager.rotateAndMoveAnimals();
+        dayManager.keepCalmAndReproduce();
+
+        int actualAnimalChildrenCount = animal.getNumberOfChildren();
+        assertEquals(1, actualAnimalChildrenCount);
+        int actualAnimal1ChildrenCount = animal1.getNumberOfChildren();
+        assertEquals(1, actualAnimal1ChildrenCount);
     }
     //    Sprawdź, czy rozmnażanie nie odbywa się, gdy są niewystarczające warunki (np. brak energii).
     @Test

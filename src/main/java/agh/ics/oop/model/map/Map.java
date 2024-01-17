@@ -1,5 +1,6 @@
 package agh.ics.oop.model.map;
 
+import agh.ics.oop.model.animal.Genome;
 import agh.ics.oop.model.edge.AllEdges;
 import agh.ics.oop.model.edge.EdgeBehavior;
 import agh.ics.oop.model.animal.Animal;

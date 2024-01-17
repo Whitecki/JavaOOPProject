@@ -9,33 +9,29 @@ import java.util.ArrayList;
 public class EquatorialGrowth implements GrowthStrategy {
     private int equatorTop;
     private int equatorBottom;
-
-    private ArrayList<Vector2D> nwm = new ArrayList<>();
+    private final ArrayList<Vector2D> placesToGrowthGrass = new ArrayList<>();
     @Override
     public void growPlants(Map map,int numberOfGrassToGrowth) {
-        this.equatorTop = (int) (map.getMaxY() - map.getMinY()) * 6/10;
-        this.equatorBottom = (int) (map.getMaxY() - map.getMinY()) * 4/10;
+        this.equatorTop = (map.getMaxY() - map.getMinY()) * 6/10;
+        this.equatorBottom = (map.getMaxY() - map.getMinY()) * 4/10;
         for (int i = map.getMinX(); i <= map.getMaxX(); i++) {
             for (int j = map.getMinY(); j <= map.getMaxY(); j++) {
                 Vector2D vector2D = new Vector2D(i, j);
                 if (!map.getGrassHashMap().containsKey(vector2D)) {
-                    nwm.add(vector2D);
+                    placesToGrowthGrass.add(vector2D);
                     if (isPlacePreferedToGrowth(map, vector2D)) {
-                        nwm.add(vector2D);
-                        nwm.add(vector2D);
-                        nwm.add(vector2D);
+                        placesToGrowthGrass.add(vector2D);
+                        placesToGrowthGrass.add(vector2D);
+                        placesToGrowthGrass.add(vector2D);
                     }
                 }
             }
         }
-        RandomVector2DGenerator randomPositionGenerator = new RandomVector2DGenerator(map, nwm,numberOfGrassToGrowth);
+        RandomVector2DGenerator randomPositionGenerator = new RandomVector2DGenerator(map, placesToGrowthGrass,numberOfGrassToGrowth);
         for (Vector2D grassPosition : randomPositionGenerator) {
             map.addGrass(grassPosition);
         }
     }
-    // uustalamy funkcje która definiuje które pola trzeba zapsać poczwórnie
-    // generator zwraca nam iterator wybranych pól
-    // wszystkie wybrane trzeba posadzić blisko
     public boolean isPlacePreferedToGrowth(Map map, Vector2D vector2D){
         return vector2D.getY() <= equatorTop && vector2D.getY()  >= equatorBottom;
     }

@@ -10,8 +10,8 @@ public class SlightAdjustmentMutation implements MutationStrategy{
         Random random = new Random();
         //musze zmienić dowolny gen
         if (random.nextInt(2) == 1){
-            genome.setActiveGenNewDirection(genome.getActiveGen().next());
+            genome.setGenNewDirection(genome.getActiveGen().next(),indexOfGenToMutate);
         }
-        else {genome.setActiveGenNewDirection(genome.getActiveGen().previous());}
+        else {genome.setGenNewDirection(genome.getActiveGen().previous(),indexOfGenToMutate);}
     }
 }

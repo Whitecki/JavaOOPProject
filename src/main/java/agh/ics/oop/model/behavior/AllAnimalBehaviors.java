@@ -1,7 +1,5 @@
 package agh.ics.oop.model.behavior;
 
-import agh.ics.oop.model.edge.AllEdges;
-
 public enum AllAnimalBehaviors {
     FullPredestination;
 
