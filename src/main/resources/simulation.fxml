@@ -6,8 +6,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
-<?import java.awt.Color?>
-<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -15,14 +13,13 @@
             stylesheets="style.css">
     <left>
         <VBox spacing="10" >
-            <VBox.margin>
-                <Insets left="10"/> <!-- Ustaw lewy margines na 10 pikseli -->
-            </VBox.margin>
+
             <Label text="LEGENDA"/>
             <GridPane vgap="10" layoutX="10" hgap="10">
                 <Label text="Rośliny" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Circle radius="10" fill="#76b474" GridPane.rowIndex="0" GridPane.columnIndex="1" />
             </GridPane>
+
             <Label text="Energia zwierzaków" />
             <GridPane vgap="10" layoutX="10" hgap="10">
                 <Label text="0-20%" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -39,7 +36,7 @@
             </GridPane>
 
             <Label text="STATYSTYKI" />
-            <GridPane styleClass="stats" vgap="10" layoutX="10" hgap="10">
+            <GridPane vgap="10" layoutX="10" hgap="10">
                 <Label text="Liczba zwierząt" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Label fx:id="animalNumStats" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Liczba roślin" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -52,17 +49,13 @@
                 <Label fx:id="averageLifeStats" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
                 <Label text="Średnia ilość dzieci" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
                 <Label fx:id="averageChildrenNumStats" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                <Label text="Najpopularniejszy genom" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <Label fx:id="popularGenomeStats" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-<!--                <HBox GridPane.rowIndex="8" GridPane.columnIndex="0">-->
-<!--                    <Button text="Zwierzaki z najpopularniejszym genomem" onAction="#highlightAnimals" />-->
-<!--                </HBox>-->
-                <HBox GridPane.rowIndex="7" GridPane.columnIndex="0">
+                <HBox GridPane.rowIndex="6" GridPane.columnIndex="0">
                     <Button text="Pola preferowane przez rośliny" onAction="#onHighlightPlantsButton" />
                 </HBox>
             </GridPane>
+
             <Label text="ŚLEDZONY ZWIERZAK" fx:id="followLabel" visible="false"/>
-            <GridPane styleClass="stats" fx:id="animalStats" vgap="10" layoutX="10" hgap="10" visible="false">
+            <GridPane fx:id="animalStats" vgap="10" layoutX="10" hgap="10" visible="false">
                 <Label text="Energia" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Label fx:id="followedanimalEnergy" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Zjedzone rośliny" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -78,6 +71,7 @@
                 <Label text="Aktywny gen" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
                 <Label fx:id="followedanimalGen" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
             </GridPane>
+
             <HBox>
                 <Button fx:id="resumeButton" text="Wznów" onAction="#onSimulationResume"/>
                 <Button fx:id="stopButton" text="Zatrzymaj" onAction="#onSimulationStop"/>

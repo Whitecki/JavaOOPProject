@@ -29,8 +29,6 @@ public class ParametersPresenter {
     @FXML
     private Spinner animalsNumSpinner;
     @FXML
-    private Spinner plantNumSpinner;
-    @FXML
     private Spinner dailyPlantsNumSpinner;
     @FXML
     private ComboBox mapVariantBox;

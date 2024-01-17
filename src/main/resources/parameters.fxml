@@ -35,12 +35,12 @@
                      min="2" max="500" initialValue="5" editable="true"/>
 
             <Label text="Liczba startowa roślin" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <Spinner fx:id="plantNumSpinner" GridPane.columnIndex="0" GridPane.rowIndex="8"
-                     min="2" max="20" initialValue="5" editable="true"/>
+            <Spinner fx:id="startPlantsSpinner" GridPane.columnIndex="0" GridPane.rowIndex="8"
+                     min="2" max="200" initialValue="5" editable="true"/>
 
-            <Label text="Ile roślinek rośnie w ciągu jednego dnia" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+            <Label text="Dzienny przyrost roślin" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
             <Spinner fx:id="dailyPlantsNumSpinner" GridPane.columnIndex="0" GridPane.rowIndex="10"
-                     min="2" max="20" initialValue="5" editable="true"/>
+                     min="2" max="100" initialValue="5" editable="true"/>
 
             <Label text="Wariant mapy" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
             <ComboBox fx:id="mapVariantBox" GridPane.columnIndex="0" GridPane.rowIndex="12">
@@ -96,28 +96,24 @@
             <Spinner fx:id="animalEatEnergySpinner" GridPane.columnIndex="1" GridPane.rowIndex="8"
                      min="2" max="8" initialValue="3" editable="true"/>
 
-            <Label text="Liczba startowa roślin" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-            <Spinner fx:id="startPlantsSpinner" GridPane.columnIndex="1" GridPane.rowIndex="10"
-                     min="2" max="20" initialValue="5" editable="true"/>
-
-            <Label text="Długość genomu" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
-            <Spinner fx:id="genomLengthSpinner" GridPane.columnIndex="1" GridPane.rowIndex="12"
+            <Label text="Długość genomu" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+            <Spinner fx:id="genomLengthSpinner" GridPane.columnIndex="1" GridPane.rowIndex="10"
                      min="3" max="20" initialValue="6" editable="true"/>
 
-            <Label text="Minimalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
-            <Spinner fx:id="minMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="14"
-                     min="0" max="20" initialValue="3" editable="true"/>
+            <Label text="Minimalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+            <Spinner fx:id="minMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="12"
+                     min="0" max="19" initialValue="3" editable="true"/>
 
-            <Label text="Maksymalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
-            <Spinner fx:id="maxMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="16"
+            <Label text="Maksymalna ilość mutacji" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+            <Spinner fx:id="maxMutationSpinner" GridPane.columnIndex="1" GridPane.rowIndex="14"
                      min="1" max="20" initialValue="4" editable="true"/>
 
-            <HBox GridPane.columnIndex="1" GridPane.rowIndex="17" spacing="10">
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="15" spacing="10">
                 <Label text="Zapisanie statystyk w pliku csv"/>
                 <CheckBox fx:id="fileSaving"/>
             </HBox>
 
-            <Button text="Start" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="18" onAction="#onSimulationStartClicked" />
+            <Button text="START" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="16" onAction="#onSimulationStartClicked" />
         </GridPane>
 
     </center>

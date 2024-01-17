@@ -66,7 +66,7 @@ public class MapVisualizer {
         builder.append(System.lineSeparator());
         return builder.toString();
     }
-//do zmiany
+
     private String drawObject(Vector2D currentPosition) {
         Object object = this.map.objectAt(currentPosition);
         if (object != null) {

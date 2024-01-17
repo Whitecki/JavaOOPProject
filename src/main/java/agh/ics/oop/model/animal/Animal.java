@@ -106,28 +106,14 @@ public class Animal implements WorldElement{
         energy = energy + e;
     }
 
-    /**
-     * Calculates the next move position based on the current direction.
-     *
-     * @return the new position after the move.
-     */
     public Vector2D nextMove() {
         Vector2D unitVector = direction.toUnitVector();
         return position.add(unitVector);
     }
 
-    /**
-     * Mutates the genom of the animal.
-     *
-     * @param numberOfGenToMutate the number of genes to mutate.
-     */
     public void mutate(int numberOfGenToMutate) {
         mutationStrategy.mutate(genom, numberOfGenToMutate);
     }
-
-    /**
-     * Changes the direction of the animal based on its genom.
-     */
 
     public void rotateAndDecreaseEnergy() {
         direction = direction.rotate(genom.getActiveGen());

@@ -85,7 +85,6 @@ public class Simulation implements Runnable{
         return new Genome(directions,activeGenIdx);
     }
 
-
     @Override
     public void run() {
         try {
@@ -100,7 +99,6 @@ public class Simulation implements Runnable{
     public void resume(){
         paused = false;
     }
-
     public Map getMap() {
         return map;
     }

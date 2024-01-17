@@ -44,7 +44,6 @@ public class DayManager {
             }
             animalList.removeIf(animal -> animal.getEnergy() == 0);
         }
-        System.out.println("umarły");
     }
 
     public void rotateAndMoveAnimals() {
@@ -71,7 +70,6 @@ public class DayManager {
             map.addAnimal(animal.getPosition(), animal);
             priorityBreedingFeedingMap.add(animal.getPosition(), animal);
         }
-        System.out.println("ruszyły się");
     }
 
 
@@ -90,7 +88,6 @@ public class DayManager {
             }
             }
         }
-        System.out.println("zjadły");
     }
 
 
@@ -106,11 +103,9 @@ public class DayManager {
                 }
             }
         }
-        System.out.println("ruchasz sie czy trzeba z tb chodzic");
     }
 
     public void newPlantsGrowth() {
         map.getGrowthStrategy().growPlants(map,configurationData.dailyPlantGrowth());
-        System.out.println("trawka urosła");
     }
 }
