@@ -3,6 +3,7 @@ package agh.ics.oop.simulation;
 import agh.ics.oop.model.animal.Animal;
 import agh.ics.oop.model.animal.Reproduction;
 import agh.ics.oop.model.animal.Vector2D;
+import agh.ics.oop.model.behavior.FullPredestination;
 import agh.ics.oop.model.map.Map;
 import agh.ics.oop.model.map.PriorityBreedingFeedingMap;
 
@@ -12,6 +13,7 @@ public class DayManager {
     private final Map map;
     private final PriorityBreedingFeedingMap priorityBreedingFeedingMap;
     private final ConfigurationData configurationData;
+    private final FullPredestination fullPredestination = new FullPredestination();
     private final int day;
 
     public DayManager(Map map, ConfigurationData configurationData, int day) {
@@ -70,6 +72,7 @@ public class DayManager {
             map.addAnimal(animal.getPosition(), animal);
             priorityBreedingFeedingMap.add(animal.getPosition(), animal);
         }
+        fullPredestination.performAction(map.getAnimalHashMap());
     }
 
 

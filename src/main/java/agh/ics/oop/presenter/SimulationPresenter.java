@@ -148,8 +148,8 @@ public class SimulationPresenter implements MapChangeListener {
         drawMap();
     }
     private int calculateCellSize(){
-        int maxCellWidth = this.CELL_WIDTH / (width);
-        int maxCellHeight = this.CELL_HEIGHT/ (height);
+        int maxCellWidth = this.CELL_WIDTH / (width+1);
+        int maxCellHeight = this.CELL_HEIGHT/ (height+1);
         return Math.min(maxCellWidth, maxCellHeight);
     }
 
@@ -191,24 +191,24 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void drawFrame(Vector2D lowerLeft, Vector2D upperRight) {
 
-        int y0 = lowerLeft.getY();
+//        int y0 = lowerLeft.getY();
         int x0 = lowerLeft.getX();
         int y1 = upperRight.getY();
-        int x1 = upperRight.getX();
-        int width = x1-x0;
-        int height = y1-y0;
+//        int x1 = upperRight.getX();
+//        int width = x1-x0;
+//        int height = y1-y0;
         mapGrid.add(new Label("y/x"), 0, 0);
         for(int i = 1; i <= width + 1; i++){
+            mapGrid.add(new Label(String.valueOf(x0)), i, 0);
             ColumnConstraints column = new ColumnConstraints(cellSize);
             mapGrid.getColumnConstraints().add(column);
-            mapGrid.add(new Label(String.valueOf(x0)), i, 0);
             x0++;
         }
 
         for(int i = 1 ; i <= height + 1; i++){
+            mapGrid.add(new Label(String.valueOf(y1)),0, i);
             RowConstraints row = new RowConstraints(cellSize);
             mapGrid.getRowConstraints().add(row);
-            mapGrid.add(new Label(String.valueOf(y1)),0, i);
             y1--;
         }
     }
@@ -220,7 +220,6 @@ public class SimulationPresenter implements MapChangeListener {
         averageLifeStats.setText(String.valueOf(statistics.averageLifeLength()));
         plantsNumStats.setText(String.valueOf(statistics.allGrassCount()));
         freeFieldsStats.setText(String.valueOf(statistics.freeFieldCount()));
-//        this.popularGenomeStats.setText();
         averageChildrenNumStats.setText(String.valueOf(statistics.averageKidsCount()));
         if(followingAnimal){
             displayAnimalStats();
